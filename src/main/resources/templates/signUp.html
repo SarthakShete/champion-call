@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - ChampionCall</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Link to your separate CSS file -->
+    <link rel="stylesheet" th:href="@{/css/signup.css}" />
+</head>
+<body class="auth-body">
+
+    <!-- Background Overlay -->
+    <div class="auth-bg"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            
+            <div class="auth-header">
+                <a th:href="@{/home}" class="logo">
+                    <!-- Ensure this points to your actual logo image -->
+                    <img th:src="@{/Images/champion.webp}" alt="ChampionCall Logo" class="custom-logo"> 
+                    ChampionCall
+                </a>
+                <h2 class="auth-title">CLAIM YOUR SPOT</h2>
+                <p class="auth-subtitle">Create an account to start playing or organizing.</p>
+            </div>
+
+            <!-- Authentic Google OAuth Button -->
+            <a th:href="@{/oauth2/authorization/google}" class="btn-google">
+                <svg width="22" height="22" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                </svg>
+                Sign up with Google
+            </a>
+
+            <div class="auth-divider">
+                <span>OR REGISTER WITH EMAIL</span>
+            </div>
+
+            <!-- Standard Form -->
+            <form th:action="@{/register}" method="POST" class="auth-form">
+                
+                <!-- Role Selector -->
+                <div class="input-group">
+                    <label>I am joining as a:</label>
+                    <div class="role-selector">
+                        <label class="role-option">
+                            <input type="radio" name="role" value="ROLE_PLAYER" checked>
+                            <div class="role-card">
+                                <i class="fa-solid fa-person-running"></i>
+                                <span>Player</span>
+                            </div>
+                        </label>
+                        <label class="role-option">
+                            <input type="radio" name="role" value="ROLE_ORGANIZER">
+                            <div class="role-card">
+                                <i class="fa-solid fa-clipboard-list"></i>
+                                <span>Organizer</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Side-by-Side First & Last Name Grid -->
+                <div class="name-grid">
+                    <div class="input-group">
+                        <label for="firstName">First Name</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-user input-icon"></i>
+                            <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="lastName">Last Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="lastName" name="lastName" placeholder="Doe" style="padding-left: 15px;" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope input-icon"></i>
+                        <input type="email" id="email" name="email" placeholder="player@championcall.com" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="password" name="password" placeholder="Create a password" required>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <label class="terms-checkbox">
+                    <input type="checkbox" required>
+                    <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</span>
+                </label>
+
+                <button type="submit" class="btn-dark-solid">Create Account <i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+
+            <p class="auth-footer-text">
+                Already have an account? <a th:href="@{/login}" class="text-orange-link">Sign In</a>
+            </p>
+            
+        </div>
+    </div>
+
+</body>
+</html>

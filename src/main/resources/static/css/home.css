@@ -1,113 +1,716 @@
-body{
-    background:#1b1b1b;
-    color:white;
-    font-family:'Segoe UI',sans-serif;
+/* =========================================
+   GLOBAL RESET & VARIABLES
+   ========================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* NAVBAR */
-
-.navbar{
-    padding:18px 0;
+:root {
+  --primary-orange: #ff914d;
+  --neon-blue: #3b38ff;
+  --text-light: #e0e0e0;
+  --bg-dark: #0b0b0e;
+  --bg-card: #151518;
+  --border-color: #222226;
 }
 
-.logo{
-    width:55px;
-    height:55px;
-    object-fit:cover;
-    border-radius:12px;
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  overflow-x: hidden;
+  line-height: 1.6;
 }
 
-.brand-name{
-    font-size:30px;
-    font-weight:700;
-    color:white;
+/* Scroll Animation Classes */
+.hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s ease-out;
 }
 
-.nav-link{
-    color:#dcdcdc !important;
-    margin:0 15px;
-    font-size:17px;
+.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.nav-link:hover{
-    color:#6ea8ff !important;
+/* Staggering transition delays for elements that appear together */
+.hero-title.show {
+  transition-delay: 0.1s;
+}
+.hero-subtext.show {
+  transition-delay: 0.2s;
+}
+.cta-group.show {
+  transition-delay: 0.3s;
 }
 
-/* HERO */
-
-.hero-section{
-    padding:90px 0;
+/* Typography Utilities */
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.sub-heading {
+  color: #a0a0a0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 12px;
+}
+.main-heading {
+  font-family: "Bebas Neue", cursive;
+  font-size: 4.5rem;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.section-desc {
+  color: #888;
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+}
+.justify-center {
+  justify-content: center;
+  margin-top: 30px;
 }
 
-.sub-heading{
-    color:#6ea8ff;
-    font-size:20px;
-    font-weight:600;
-    letter-spacing:1px;
+/* =========================================
+   1. NAVBAR (STICKY)
+   ========================================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 5%;
+  background: rgba(11, 11, 14, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.custom-logo {
+  height: 40px !important; /* Locks the height so it never blows up */
+  width: auto !important; /* Keeps the logo proportions correct */
+  max-width: 100%; /* Failsafe to prevent horizontal overflow */
+  object-fit: contain; /* Ensures the image stays crisp and isn't stretched */
+  border-radius: 6px; /* Optional: Adds a slight curve to the image edges */
+}
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  background: #fff;
+  color: #000;
+  padding: 8px;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 35px;
+}
+.nav-links a {
+  text-decoration: none;
+  color: #a0a0a0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.nav-links a:hover {
+  color: #ffffff;
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+.login-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.btn-signup {
+  background: #ffffff;
+  color: #000000;
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 700;
+  transition: 0.3s;
+}
+.btn-signup:hover {
+  background: var(--primary-orange);
+  color: #fff;
 }
 
-.main-heading{
-    font-size:68px;
-    font-weight:800;
-    margin-top:10px;
-    margin-bottom:20px;
+/* =========================================
+   2. HERO SECTION
+   ========================================= */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Updated generic sports stadium background */
+  background-image: linear-gradient(
+      to right,
+      rgba(11, 11, 14, 0.95) 30%,
+      rgba(11, 11, 14, 0.4) 100%
+    ),
+    url("https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?q=80&w=2000&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  padding-top: 80px; /* Offset for fixed navbar */
 }
 
-.hero-text{
-    max-width:750px;
-    margin:auto;
-    font-size:25px;
-    color:#d6d6d6;
-    line-height:1.6;
+.hero-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 5%;
+  max-width: 850px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+  width: fit-content;
+  text-transform: uppercase;
+}
+.badge .dot {
+  width: 6px;
+  height: 6px;
+  background-color: #fff;
+  border-radius: 50%;
 }
 
-.hero-buttons{
-    margin-top:40px;
+.hero-title {
+  font-family: "Bebas Neue", cursive;
+  font-size: 8rem;
+  line-height: 0.9;
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+}
+.text-orange {
+  color: var(--primary-orange);
+}
+.hero-subtext {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-bottom: 45px;
+  max-width: 600px;
 }
 
-.hero-buttons .btn{
-    padding:14px 30px;
-    border-radius:14px;
+.cta-group {
+  display: flex;
+  gap: 20px;
+}
+.btn-neon-blue {
+  background: rgba(10, 15, 40, 0.6);
+  border: 2px solid var(--neon-blue);
+  color: #8c8aff;
+  text-decoration: none;
+  padding: 16px 36px;
+  border-radius: 30px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 15px rgba(59, 56, 255, 0.4);
+  transition: 0.3s;
+}
+.btn-neon-blue:hover {
+  background: var(--neon-blue);
+  color: #ffffff;
+  box-shadow: 0 0 25px rgba(59, 56, 255, 0.7);
+  transform: translateY(-3px);
+}
+.btn-solid-white {
+  background: #ffffff;
+  color: #000;
+  text-decoration: none;
+  padding: 16px 36px;
+  border-radius: 30px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.3s;
+}
+.btn-solid-white:hover {
+  background: #e0e0e0;
+  transform: translateY(-3px);
+}
+.btn-dark-outline {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  text-decoration: none;
+  padding: 16px 36px;
+  border-radius: 30px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.3s;
+}
+.btn-dark-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* STATS */
-
-.stats-section{
-    padding-bottom:70px;
+.ticker-bar {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #888;
+  letter-spacing: 1px;
 }
 
-.stat-card{
-    background:#242424;
-    border-radius:18px;
-    padding:35px;
-    text-align:center;
-    transition:0.3s;
+/* =========================================
+   3. FEATURES SECTION
+   ========================================= */
+.features-section {
+  padding: 120px 5%;
+  max-width: 1300px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.features-split {
+  display: flex;
+  gap: 60px;
+}
+.feature-column {
+  flex: 1;
 }
 
-.stat-card:hover{
-    transform:translateY(-5px);
+.column-title {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+.column-title::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #333;
+  z-index: -1;
+}
+.column-title span {
+  background: var(--bg-dark);
+  padding: 0 20px;
 }
 
-.stat-card h2{
-    font-size:42px;
-    font-weight:700;
+.grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 35px 25px;
+  transition: 0.3s;
+}
+.feature-card:hover {
+  border-color: #555;
+  transform: translateY(-5px);
 }
 
-.stat-card p{
-    color:#cfcfcf;
-    margin-top:10px;
-    font-size:18px;
+.f-icon {
+  font-size: 1.3rem;
+  color: #fff;
+  margin-bottom: 25px;
+  background: #222;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid #333;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+.feature-card h4 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  color: #fff;
+  font-weight: 600;
+}
+.feature-card p {
+  font-size: 0.95rem;
+  color: #888;
 }
 
-/* SECTION TITLE */
-
-.section-title{
-    font-size:45px;
-    font-weight:700;
+/* =========================================
+   4. SPORTS CATEGORIES
+   ========================================= */
+.sports-categories {
+  padding: 60px 5% 120px;
+  max-width: 1300px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.sports-grid {
+  display: flex;
+  gap: 25px;
+}
+.sport-card {
+  flex: 1;
+  height: 450px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 35px;
+  transition: 0.3s;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
 }
 
-.view-all{
-    text-decoration:none;
-    color:#6ea8ff;
-    font-size:18px;
+.sport-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 1;
+}
+.sport-card:hover {
+  transform: scale(1.02);
+  border-color: #555;
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+}
+.t-count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #a0a0a0;
+  margin-bottom: 8px;
+  display: block;
+}
+.sport-card h3 {
+  font-family: "Bebas Neue", cursive;
+  font-size: 3rem;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+/* =========================================
+   5. HOW IT WORKS (TIMELINE)
+   ========================================= */
+.how-it-works {
+  padding: 100px 5%;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  overflow: hidden;
+}
+.timeline-container {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  padding: 40px 0;
+}
+
+.timeline-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 100%;
+  background: #444;
+  z-index: 1;
+}
+
+.timeline-step {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 2;
+}
+.step-content {
+  width: 45%;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  padding: 30px;
+  border-radius: 16px;
+  transition: 0.3s;
+}
+.step-content:hover {
+  border-color: #666;
+}
+
+.step-icon {
+  width: 50px;
+  height: 50px;
+  background: var(--bg-dark);
+  border: 1px solid #666;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #fff;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.step-number {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #a0a0a0;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.step-content h4 {
+  font-family: "Bebas Neue", cursive;
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+.step-content p {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.timeline-step:nth-child(odd) .step-content {
+  margin-left: auto;
+  text-align: left;
+}
+.timeline-step:nth-child(even) .step-content {
+  text-align: right;
+}
+
+/* =========================================
+   6. GALLERY
+   ========================================= */
+.gallery-section {
+  padding: 120px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 200px;
+  gap: 15px;
+}
+
+.g-item {
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: 0.3s;
+}
+.g-item:hover {
+  transform: scale(1.03);
+  z-index: 10;
+  border-color: #555;
+}
+
+/* Gallery Span Utilities */
+.g-item.tall {
+  grid-row: span 2;
+  grid-column: span 1;
+}
+.g-item.wide {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+/* Adjustments for the specific masonry look */
+.g-item:nth-child(1) {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+}
+.g-item:nth-child(2) {
+  grid-column: 2 / 4;
+  grid-row: 1 / 2;
+}
+.g-item:nth-child(3) {
+  grid-column: 4 / 5;
+  grid-row: 1 / 2;
+}
+.g-item:nth-child(4) {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+}
+.g-item:nth-child(5) {
+  grid-column: 3 / 5;
+  grid-row: 2 / 3;
+}
+.g-item:nth-child(6) {
+  grid-column: 1 / 3;
+  grid-row: 3 / 5;
+}
+
+/* =========================================
+   7. CTA & FOOTER
+   ========================================= */
+.main-footer {
+  background-color: var(--bg-dark);
+}
+
+.cta-banner {
+  margin: 0 5%;
+  padding: 80px 20px;
+  background: radial-gradient(
+    circle at center,
+    #2a2015 0%,
+    var(--bg-card) 100%
+  );
+  border: 1px solid #332b22;
+  border-radius: 24px;
+  text-align: center;
+}
+
+.cta-banner p {
+  color: #aaa;
+  font-size: 1.1rem;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  padding: 80px 5% 40px;
+  max-width: 1300px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border-color);
+  margin-top: 80px;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.brand-col {
+  max-width: 350px;
+}
+.brand-col p {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+.contact-info span {
+  color: #aaa;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-col h4 {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.footer-col a {
+  color: #888;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+.footer-col a:hover {
+  color: #fff;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .features-split,
+  .sports-grid,
+  .footer-bottom {
+    flex-direction: column;
+  }
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .g-item:nth-child(n) {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+  .timeline-container::before {
+    left: 25px;
+  }
+  .step-icon {
+    left: 25px;
+  }
+  .step-content {
+    width: 85%;
+    margin-left: auto !important;
+    text-align: left !important;
+  }
 }

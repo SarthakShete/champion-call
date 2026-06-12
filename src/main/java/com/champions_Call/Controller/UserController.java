@@ -3,6 +3,7 @@ package com.champions_Call.Controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
 @Controller
 public class UserController {
 
@@ -15,4 +16,15 @@ public class UserController {
     public String test(){
         return "test";
     }
+
+    @GetMapping("/signUp")
+    public String registration() {
+        return "signUp";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+    
 }

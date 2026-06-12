@@ -3,119 +3,383 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Champion Call</title>
+    <title>ChampionCall - Grassroots Sports</title>
 
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="/css/home.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    />
   </head>
   <body>
-    <!-- NAVBAR -->
-    <nav
-      class="navbar navbar-expand-lg navbar-dark border-bottom border-secondary"
-    >
-      <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="#">
-          <img
-            src="Images/champion.webp"
-            alt="Champion Call Logo"
-            class="logo"
-          />
-
-          <span class="ms-2 brand-name"> Champion Call </span>
-        </a>
-
-        <button
-          class="navbar-toggler"
-          data-bs-toggle="collapse"
-          data-bs-target="#menu"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="menu">
-          <a href="#" class="btn btn-outline-light px-4"> Sign In </a>
-        </div>
+    <nav class="navbar">
+      <div class="logo">
+        <img
+          th:src="@{/Images/champion.webp}"
+          alt="ChampionCall Logo"
+          class="custom-logo"
+        />ChampionCall
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Tournaments</a></li>
+        <li><a href="#">Teams</a></li>
+        <li><a href="#">Organizers</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="#" class="login-link">Login</a>
+        <a href="#" class="btn-signup">Sign Up</a>
       </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <section class="hero-section">
-      <div class="container text-center">
-        <p class="sub-heading">GRASSROOTS SPORTS, ORGANIZED</p>
-
-        <h1 class="main-heading">Every Match Starts With A Call</h1>
-
-        <p class="hero-text">
-          Discover cricket, football, kabaddi and badminton tournaments near you
-          — or organize your own and bring players together.
+    <header class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title hidden">
+          EVERY MATCH STARTS<br /><span class="text-orange">WITH A CALL</span>
+        </h1>
+        <p class="hero-subtext hidden">
+          Discover tournaments, register teams, manage events, and build sports
+          communities — all on one platform built for players and organizers.
         </p>
+        <div class="cta-group hidden">
+          <a href="#" class="btn-neon-blue"
+            >Join Tournament <i class="fa-solid fa-arrow-right"></i
+          ></a>
+          <a href="#" class="btn-dark-outline"
+            ><i class="fa-solid fa-bullhorn"></i> Become Organizer</a
+          >
+        </div>
+      </div>
 
-        <div class="hero-buttons">
-          <button class="btn btn-primary btn-lg me-3">
-            <i class="fa-solid fa-trophy"></i>
-            Join a Tournament
-          </button>
+      <div class="ticker-bar">
+        <span>LIVE SCORES &bull;</span>
+        <span>INSTANT FIXTURES &bull;</span>
+        <span>LOCAL LEAGUES &bull;</span>
+        <span>CRICKET &bull;</span>
+        <span>FOOTBALL &bull;</span>
+        <span>KABADDI &bull;</span>
+        <span>BADMINTON &bull;</span>
+        <span>VOLLEYBALL &bull;</span>
+      </div>
+    </header>
 
-          <button class="btn btn-outline-light btn-lg">
-            <i class="fa-solid fa-calendar-plus"></i>
-            Become an Organizer
-          </button>
+    <section class="features-section">
+      <div class="section-header hidden">
+        <span class="sub-heading">BUILT FOR EVERYONE</span>
+        <h2 class="main-heading">One platform. Every role covered.</h2>
+        <p class="section-desc">
+          Whether you're lacing up to compete or running the whole show,
+          Champion Call gives you the tools to win.
+        </p>
+      </div>
+
+      <div class="features-split">
+        <div class="feature-column">
+          <h3 class="column-title hidden"><span>FOR PLAYERS</span></h3>
+          <div class="grid-2x2">
+            <div class="feature-card hidden">
+              <i class="fa-solid fa-location-dot f-icon"></i>
+              <h4>Find Tournaments Nearby</h4>
+              <p>
+                Discover competitions in your city filtered by sport, level, and
+                date.
+              </p>
+            </div>
+            <div class="feature-card hidden">
+              <i class="fa-solid fa-bolt f-icon"></i>
+              <h4>Register Instantly</h4>
+              <p>
+                Sign up your team in seconds with a streamlined registration
+                flow.
+              </p>
+            </div>
+            <div class="feature-card hidden">
+              <i class="fa-regular fa-calendar f-icon"></i>
+              <h4>View Schedules</h4>
+              <p>
+                Stay on top of fixtures, venues, and match timings in real time.
+              </p>
+            </div>
+            <div class="feature-card hidden">
+              <i class="fa-solid fa-chart-simple f-icon"></i>
+              <h4>Track Results</h4>
+              <p>
+                Follow live scores, standings, and your personal performance
+                stats.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-column">
+          <h3 class="column-title hidden"><span>FOR ORGANIZERS</span></h3>
+          <div class="grid-2x2">
+            <div class="feature-card hidden">
+              <i class="fa-solid fa-circle-plus f-icon"></i>
+              <h4>Create Tournaments</h4>
+              <p>
+                Launch a tournament with custom formats, rules, and brackets in
+                minutes.
+              </p>
+            </div>
+            <div class="feature-card hidden">
+              <i class="fa-solid fa-clipboard-list f-icon"></i>
+              <h4>Manage Registrations</h4>
+              <p>
+                Approve teams, collect fees, and handle communications in one
+                place.
+              </p>
+            </div>
+            <div class="feature-card hidden">
+              <i class="fa-solid fa-sitemap f-icon"></i>
+              <h4>Generate Fixtures</h4>
+              <p>
+                Auto-generate balanced fixtures and brackets with a single
+                click.
+              </p>
+            </div>
+            <div class="feature-card hidden">
+              <i class="fa-solid fa-tower-broadcast f-icon"></i>
+              <h4>Update Live Scores</h4>
+              <p>
+                Push live results and notify participants instantly as matches
+                unfold.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- STATS -->
-    <section class="stats-section">
-      <div class="container">
-        <div class="row g-4">
-          <div class="col-md-3">
-            <div class="stat-card">
-              <h2>2,400+</h2>
-              <p>Players</p>
-            </div>
-          </div>
+    <section class="sports-categories">
+      <div class="section-header hidden">
+        <span class="sub-heading">PICK YOUR GAME</span>
+        <h2 class="main-heading">Sports categories</h2>
+        <p class="section-desc">
+          From the cricket pitch to the basketball court — find your community
+          across every major sport.
+        </p>
+      </div>
 
-          <div class="col-md-3">
-            <div class="stat-card">
-              <h2>180+</h2>
-              <p>Tournaments</p>
-            </div>
+      <div class="sports-grid">
+        <div
+          class="sport-card hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=800&auto=format&fit=crop');
+          "
+        >
+          <div class="card-content">
+            <span class="t-count">640+ TOURNAMENTS</span>
+            <h3>Cricket</h3>
           </div>
-
-          <div class="col-md-3">
-            <div class="stat-card">
-              <h2>6</h2>
-              <p>Sports</p>
-            </div>
+        </div>
+        <div
+          class="sport-card hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=800&auto=format&fit=crop');
+          "
+        >
+          <div class="card-content">
+            <span class="t-count">820+ TOURNAMENTS</span>
+            <h3>Football</h3>
           </div>
-
-          <div class="col-md-3">
-            <div class="stat-card">
-              <h2>4.6</h2>
-              <p>Organizer Rating</p>
-            </div>
+        </div>
+        <div
+          class="sport-card hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1593789178385-e2dbffdc13df?q=80&w=800&auto=format&fit=crop');
+          "
+        >
+          <div class="card-content">
+            <span class="t-count">210+ TOURNAMENTS</span>
+            <h3>Kabaddi</h3>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- TOURNAMENT SECTION TITLE -->
-    <section class="container pb-5">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2 class="section-title">Tournaments Near Pune</h2>
+    <section class="how-it-works">
+      <div class="section-header hidden">
+        <span class="sub-heading">GET STARTED IN 4 STEPS</span>
+        <h2 class="main-heading">How it works</h2>
+      </div>
 
-        <a href="#" class="view-all"> View All </a>
+      <div class="timeline-container">
+        <div class="timeline-step hidden">
+          <div class="step-icon"><i class="fa-solid fa-user-plus"></i></div>
+          <div class="step-content">
+            <span class="step-number">Step 1</span>
+            <h4>Create Account</h4>
+            <p>Sign up free as a player or organizer in under a minute.</p>
+          </div>
+        </div>
+        <div class="timeline-step hidden">
+          <div class="step-icon">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <div class="step-content">
+            <span class="step-number">Step 2</span>
+            <h4>Find or Create Tournament</h4>
+            <p>Browse nearby events or launch your own competition.</p>
+          </div>
+        </div>
+        <div class="timeline-step hidden">
+          <div class="step-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="step-content">
+            <span class="step-number">Step 3</span>
+            <h4>Register Teams</h4>
+            <p>Add your squad, invite players, and confirm your slot.</p>
+          </div>
+        </div>
+        <div class="timeline-step hidden">
+          <div class="step-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="step-content">
+            <span class="step-number">Step 4</span>
+            <h4>Play & Track Results</h4>
+            <p>Compete, follow live scores, and climb the standings.</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <section class="gallery-section">
+      <div class="section-header hidden">
+        <span class="sub-heading">FROM THE FIELD</span>
+        <h2 class="main-heading">Moments that matter</h2>
+      </div>
+
+      <div class="gallery-grid">
+        <div
+          class="g-item tall hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1569074187119-c87815b476da?q=80&w=600&auto=format&fit=crop');
+          "
+        ></div>
+        <div
+          class="g-item wide hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1526232761682-d26e03ac148e?q=80&w=800&auto=format&fit=crop');
+          "
+        ></div>
+        <div
+          class="g-item hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=600&auto=format&fit=crop');
+          "
+        ></div>
+        <div
+          class="g-item hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=600&auto=format&fit=crop');
+          "
+        ></div>
+        <div
+          class="g-item wide hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800&auto=format&fit=crop');
+          "
+        ></div>
+        <div
+          class="g-item tall hidden"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?q=80&w=600&auto=format&fit=crop');
+          "
+        ></div>
+      </div>
+    </section>
+
+    <footer class="main-footer">
+      <div class="cta-banner hidden">
+        <h2 class="main-heading">READY TO BUILD THE<br />NEXT CHAMPIONSHIP?</h2>
+        <p>
+          Join thousands of players and organizers turning grassroots passion<br />into
+          organized competition.
+        </p>
+        <div class="cta-group justify-center">
+          <a href="#" class="btn-solid-white"
+            >Join Tournament <i class="fa-solid fa-arrow-right"></i
+          ></a>
+          <a href="#" class="btn-dark-outline"
+            ><i class="fa-solid fa-bullhorn"></i> Start Organizing</a
+          >
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-col brand-col hidden">
+          <div class="logo">
+            <img
+              th:src="@{/Images/champion.webp}"
+              alt="ChampionCall Logo"
+              class="custom-logo"
+            />
+            ChampionCall
+          </div>
+          <p>
+            Champion Call connects players, teams, and tournament organizers on
+            one platform. Every match starts with a call.
+          </p>
+          <div class="contact-info">
+            <span
+              ><i class="fa-regular fa-envelope"></i>
+              hello@championcall.com</span
+            >
+            <span><i class="fa-solid fa-phone"></i> +91 98765 43210</span>
+            <span><i class="fa-solid fa-location-dot"></i> Pune, India</span>
+          </div>
+        </div>
+
+        <div class="footer-col hidden">
+          <h4>PLATFORM</h4>
+          <a href="#">Tournaments</a>
+          <a href="#">Teams</a>
+          <a href="#">Organizers</a>
+          <a href="#">Live Scores</a>
+          <a href="#">Pricing</a>
+        </div>
+
+        <div class="footer-col hidden">
+          <h4>COMPANY</h4>
+          <a href="#">About Us</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Press</a>
+          <a href="#">Partners</a>
+        </div>
+
+        <div class="footer-col hidden">
+          <h4>SUPPORT</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Contact</a>
+          <a href="#">Community</a>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+            }
+          });
+        },
+        {
+          threshold: 0.1, // Triggers when 10% of the element is visible
+        }
+      );
+
+      const hiddenElements = document.querySelectorAll(".hidden");
+      hiddenElements.forEach((el) => observer.observe(el));
+    </script>
   </body>
 </html>
