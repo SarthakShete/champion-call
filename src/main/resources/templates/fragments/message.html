@@ -1,0 +1,42 @@
+<div th:if="${message}" th:fragment="messageBox">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script th:inline="javascript">
+    // Extract the content and type from your Java Message object
+    var content = /*[[${message.content}]]*/ "Default Message";
+    var type = /*[[${message.type.name()}]]*/ "blue"; // Gets 'red', 'green', etc.
+
+    // Map your Java MessageType (colors) to SweetAlert icons
+    var swalIcon = "info"; // Default
+    var swalTitle = "Notice";
+
+    if (type === "red") {
+      swalIcon = "error";
+      swalTitle = "Oops...";
+    } else if (type === "green") {
+      swalIcon = "success";
+      swalTitle = "Success!";
+    } else if (type === "yellow") {
+      swalIcon = "warning";
+      swalTitle = "Warning";
+    }
+
+    // Fire the beautiful pop-up!
+    Swal.fire({
+      icon: swalIcon,
+      title: swalTitle,
+      text: content,
+      background: "#1f2937", // Sleek dark gray (Tailwind gray-800). Change to '#000000' for pure black!
+      color: "#ffffff", // Crisp white text
+      confirmButtonColor: "#ea580c", // A nice vibrant orange to match your UI
+      confirmButtonText: "Okay",
+      customClass: {
+        popup: "rounded-xl", // Gives it nice modern, rounded corners
+      },
+    }).then((result) => {
+      if (result.isConfirmed && swalIcon === "success") {
+        window.location.href = "/login";
+      }
+    });
+  </script>
+</div>
