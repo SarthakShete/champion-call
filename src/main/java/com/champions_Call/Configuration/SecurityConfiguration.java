@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                                 "/do-signUp",
                                 "/authenticate",
                                 "/error",
+                                "/test",
 
 
                                 // 🔥 STATIC RESOURCES (MOST IMPORTANT)

@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class SignUpForm {
+public class SignUpForm{
 
     @NotBlank(message = "First Name is Required...")
     private String firstName;

@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ChampionCall - Grassroots Sports</title>
-
     <link
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
@@ -16,55 +15,140 @@
     <link rel="stylesheet" href="/css/test.css" />
   </head>
   <body>
+    <!-- NAVBAR -->
     <nav class="navbar">
       <div class="logo">
-        <i class="fa-solid fa-phone-volume logo-icon"></i> ChampionCall
+        <img
+          th:src="@{/Images/champion.webp}"
+          alt="ChampionCall Logo"
+          class="custom-logo"
+        />
+        ChampionCall
       </div>
-      <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Tournaments</a></li>
-        <li><a href="#">Teams</a></li>
-        <li><a href="#">Organizers</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-      <div class="nav-actions">
-        <a href="#" class="login-link">Login</a>
-        <a href="#" class="btn-signup">Sign Up</a>
+
+      <!-- Logged OUT navbar -->
+      <div class="nav-actions" th:if="${session.loggedInUser == null}">
+        <a th:href="@{/login}" class="login-link">Login</a>
+        <a th:href="@{/signUp}" class="btn-signup">Sign Up</a>
+      </div>
+
+      <!-- Logged IN as PLAYER navbar -->
+      <div
+        class="nav-actions"
+        th:if="${session.loggedInUser != null and session.loggedInUser.role == 'PLAYER'}"
+      >
+        <span class="login-link"
+          >Hi,
+          <span th:text="${session.loggedInUser.firstName}"></span> 👋</span
+        >
+        <a th:href="@{/logout}" class="btn-signup">Logout</a>
+      </div>
+
+      <!-- Logged IN as ORGANIZER navbar -->
+      <div
+        class="nav-actions"
+        th:if="${session.loggedInUser != null and session.loggedInUser.role == 'ORGANIZER'}"
+      >
+        <span class="login-link"
+          >Hi,
+          <span th:text="${session.loggedInUser.firstName}"></span> 👋</span
+        >
+        <a th:href="@{/logout}" class="btn-signup">Logout</a>
       </div>
     </nav>
 
+    <!-- HERO -->
     <header class="hero-section">
+      <!-- Particle canvas background -->
+      <canvas id="particles"></canvas>
+
+      <!-- Floating sport orbs -->
+      <div class="orb orb-cricket">🏏</div>
+      <div class="orb orb-football">⚽</div>
+      <div class="orb orb-kabaddi">🤼</div>
+
+      <!-- Centered hero content -->
       <div class="hero-content">
+        <div class="hero-badge hidden">
+          <span class="badge-dot"></span> GRASSROOTS SPORTS, ORGANIZED
+        </div>
         <h1 class="hero-title hidden">
-          EVERY MATCH STARTS<br /><span class="text-orange">WITH A CALL</span>
+          EVERY MATCH<br />STARTS<br /><span class="text-orange"
+            >WITH A CALL</span
+          >
         </h1>
         <p class="hero-subtext hidden">
           Discover tournaments, register teams, manage events, and build sports
           communities — all on one platform built for players and organizers.
         </p>
-        <div class="cta-group hidden">
-          <a href="#" class="btn-neon-blue"
-            >Join Tournament <i class="fa-solid fa-arrow-right"></i
-          ></a>
-          <a href="#" class="btn-dark-outline"
-            ><i class="fa-solid fa-bullhorn"></i> Become Organizer</a
-          >
+
+        <!-- ===== LOGGED OUT — 2 buttons ===== -->
+        <div class="cta-group hidden" th:if="${session.loggedInUser == null}">
+          <a class="btn-neon-blue" onclick="setRole('PLAYER')">
+            Join Tournament <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <a class="btn-dark-outline" onclick="setRole('ORGANIZER')">
+            <i class="fa-solid fa-bullhorn"></i> Become Organizer
+          </a>
+        </div>
+
+        <!-- ===== LOGGED IN as PLAYER — Explore button + 2 secondary buttons ===== -->
+        <div
+          class="cta-group hidden"
+          th:if="${session.loggedInUser != null and session.loggedInUser.role == 'PLAYER'}"
+        >
+          <a th:href="@{/tournaments}" class="btn-explore">
+            <i class="fa-solid fa-compass"></i> Explore Tournaments
+          </a>
+          <div class="secondary-btns">
+            <a th:href="@{/tournaments}" class="btn-neon-blue">
+              Join Tournament <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a th:href="@{/my-registrations}" class="btn-dark-outline">
+              <i class="fa-solid fa-list"></i> My Registrations
+            </a>
+          </div>
+        </div>
+
+        <!-- ===== LOGGED IN as ORGANIZER — Explore button + 2 secondary buttons ===== -->
+        <div
+          class="cta-group hidden"
+          th:if="${session.loggedInUser != null and session.loggedInUser.role == 'ORGANIZER'}"
+        >
+          <a th:href="@{/organizer/dashboard}" class="btn-explore">
+            <i class="fa-solid fa-compass"></i> My Dashboard
+          </a>
+          <div class="secondary-btns">
+            <a th:href="@{/organizer/create}" class="btn-neon-blue">
+              <i class="fa-solid fa-plus"></i> Create Tournament
+            </a>
+            <a th:href="@{/organizer/tournaments}" class="btn-dark-outline">
+              <i class="fa-solid fa-clipboard-list"></i> My Tournaments
+            </a>
+          </div>
         </div>
       </div>
 
+      <!-- Ticker -->
       <div class="ticker-bar">
-        <span>LIVE SCORES &bull;</span>
-        <span>INSTANT FIXTURES &bull;</span>
-        <span>LOCAL LEAGUES &bull;</span>
-        <span>CRICKET &bull;</span>
-        <span>FOOTBALL &bull;</span>
-        <span>KABADDI &bull;</span>
-        <span>BADMINTON &bull;</span>
-        <span>VOLLEYBALL &bull;</span>
+        <div class="ticker-track">
+          <span>LIVE SCORES &bull;</span>
+          <span>INSTANT FIXTURES &bull;</span>
+          <span>LOCAL LEAGUES &bull;</span>
+          <span>CRICKET &bull;</span>
+          <span>FOOTBALL &bull;</span>
+          <span>KABADDI &bull;</span>
+          <span>LIVE SCORES &bull;</span>
+          <span>INSTANT FIXTURES &bull;</span>
+          <span>LOCAL LEAGUES &bull;</span>
+          <span>CRICKET &bull;</span>
+          <span>FOOTBALL &bull;</span>
+          <span>KABADDI &bull;</span>
+        </div>
       </div>
     </header>
 
+    <!-- FEATURES -->
     <section class="features-section">
       <div class="section-header hidden">
         <span class="sub-heading">BUILT FOR EVERYONE</span>
@@ -74,7 +158,6 @@
           Champion Call gives you the tools to win.
         </p>
       </div>
-
       <div class="features-split">
         <div class="feature-column">
           <h3 class="column-title hidden"><span>FOR PLAYERS</span></h3>
@@ -112,7 +195,6 @@
             </div>
           </div>
         </div>
-
         <div class="feature-column">
           <h3 class="column-title hidden"><span>FOR ORGANIZERS</span></h3>
           <div class="grid-2x2">
@@ -153,16 +235,16 @@
       </div>
     </section>
 
+    <!-- SPORTS CATEGORIES -->
     <section class="sports-categories">
       <div class="section-header hidden">
         <span class="sub-heading">PICK YOUR GAME</span>
         <h2 class="main-heading">Sports categories</h2>
         <p class="section-desc">
-          From the cricket pitch to the basketball court — find your community
-          across every major sport.
+          From the cricket pitch to the kabaddi mat — find your community across
+          every major sport.
         </p>
       </div>
-
       <div class="sports-grid">
         <div
           class="sport-card hidden"
@@ -189,7 +271,7 @@
         <div
           class="sport-card hidden"
           style="
-            background-image: url('https://images.unsplash.com/photo-1593789178385-e2dbffdc13df?q=80&w=800&auto=format&fit=crop');
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Kabaddi..JPG/1280px-Kabaddi..JPG');
           "
         >
           <div class="card-content">
@@ -200,12 +282,12 @@
       </div>
     </section>
 
+    <!-- HOW IT WORKS -->
     <section class="how-it-works">
       <div class="section-header hidden">
         <span class="sub-heading">GET STARTED IN 4 STEPS</span>
         <h2 class="main-heading">How it works</h2>
       </div>
-
       <div class="timeline-container">
         <div class="timeline-step hidden">
           <div class="step-icon"><i class="fa-solid fa-user-plus"></i></div>
@@ -244,58 +326,59 @@
       </div>
     </section>
 
+    <!-- GALLERY -->
     <section class="gallery-section">
       <div class="section-header hidden">
         <span class="sub-heading">FROM THE FIELD</span>
         <h2 class="main-heading">Moments that matter</h2>
       </div>
-
       <div class="gallery-grid">
         <div
           class="g-item tall hidden"
           style="
-            background-image: url('https://images.unsplash.com/photo-1569074187119-c87815b476da?q=80&w=600&auto=format&fit=crop');
+            background-image: url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=600&auto=format&fit=crop');
           "
         ></div>
         <div
           class="g-item wide hidden"
           style="
-            background-image: url('https://images.unsplash.com/photo-1526232761682-d26e03ac148e?q=80&w=800&auto=format&fit=crop');
+            background-image: url('https://images.unsplash.com/photo-1517747614396-d21a78b850e8?q=80&w=800&auto=format&fit=crop');
           "
         ></div>
         <div
           class="g-item hidden"
           style="
-            background-image: url('https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=600&auto=format&fit=crop');
+            background-image: url('https://images.unsplash.com/photo-1577223625816-7546f13df25d?q=80&w=600&auto=format&fit=crop');
           "
         ></div>
         <div
           class="g-item hidden"
           style="
-            background-image: url('https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=600&auto=format&fit=crop');
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Kabaddi..JPG/800px-Kabaddi..JPG');
           "
         ></div>
         <div
           class="g-item wide hidden"
           style="
-            background-image: url('https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=800&auto=format&fit=crop');
+            background-image: url('https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=800&auto=format&fit=crop');
           "
         ></div>
         <div
           class="g-item tall hidden"
           style="
-            background-image: url('https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?q=80&w=600&auto=format&fit=crop');
+            background-image: url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=600&auto=format&fit=crop');
           "
         ></div>
       </div>
     </section>
 
+    <!-- FOOTER -->
     <footer class="main-footer">
       <div class="cta-banner hidden">
         <h2 class="main-heading">READY TO BUILD THE<br />NEXT CHAMPIONSHIP?</h2>
         <p>
-          Join thousands of players and organizers turning grassroots passion<br />into
-          organized competition.
+          Join thousands of players and organizers turning grassroots passion
+          into organized competition.
         </p>
         <div class="cta-group justify-center">
           <a href="#" class="btn-solid-white"
@@ -306,11 +389,15 @@
           >
         </div>
       </div>
-
       <div class="footer-bottom">
         <div class="footer-col brand-col hidden">
           <div class="logo">
-            <i class="fa-solid fa-phone-volume logo-icon"></i> ChampionCall
+            <img
+              th:src="@{/Images/champion.webp}"
+              alt="ChampionCall Logo"
+              class="custom-logo"
+            />
+            ChampionCall
           </div>
           <p>
             Champion Call connects players, teams, and tournament organizers on
@@ -325,7 +412,6 @@
             <span><i class="fa-solid fa-location-dot"></i> Pune, India</span>
           </div>
         </div>
-
         <div class="footer-col hidden">
           <h4>PLATFORM</h4>
           <a href="#">Tournaments</a>
@@ -334,7 +420,6 @@
           <a href="#">Live Scores</a>
           <a href="#">Pricing</a>
         </div>
-
         <div class="footer-col hidden">
           <h4>COMPANY</h4>
           <a href="#">About Us</a>
@@ -343,7 +428,6 @@
           <a href="#">Press</a>
           <a href="#">Partners</a>
         </div>
-
         <div class="footer-col hidden">
           <h4>SUPPORT</h4>
           <a href="#">Help Center</a>
@@ -355,22 +439,6 @@
       </div>
     </footer>
 
-    <script>
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("show");
-            }
-          });
-        },
-        {
-          threshold: 0.1, // Triggers when 10% of the element is visible
-        }
-      );
-
-      const hiddenElements = document.querySelectorAll(".hidden");
-      hiddenElements.forEach((el) => observer.observe(el));
-    </script>
+    <script src="/js/home.js"></script>
   </body>
 </html>
