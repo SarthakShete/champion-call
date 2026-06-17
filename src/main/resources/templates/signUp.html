@@ -73,38 +73,41 @@
           data-th-object="${signForm}"
           method="POST"
           class="auth-form"
+          novalidate
         >
-        
           <!-- Role Selector -->
-        <div class="input-group">
+          <div class="input-group">
             <label>I am joining as a:</label>
             <div class="role-selector">
+              <label class="role-option">
+                <input
+                  type="radio"
+                  th:field="*{role}"
+                  value="PLAYER"
+                  id="playerRole"
+                  th:disabled="${signForm.role != 'PLAYER'}"
+                />
+                <div class="role-card">
+                  <i class="fa-solid fa-person-running"></i>
+                  <span>Player</span>
+                </div>
+              </label>
 
-                <label class="role-option">
-                    <input type="radio"
-                        th:field="*{role}"
-                        value="PLAYER"
-                        id="playerRole"
-                        th:disabled="${signForm.role != 'PLAYER'}">
-                    <div class="role-card">
-                        <i class="fa-solid fa-person-running"></i>
-                        <span>Player</span>
-                    </div>
-                </label>
-
-                <label class="role-option">
-                    <input type="radio"
-                        th:field="*{role}"
-                        value="ORGANIZER"
-                        id="organizerRole"
-                        th:disabled="${signForm.role != 'ORGANIZER'}">
-                    <div class="role-card">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                        <span>Organizer</span>
-                    </div>
-                </label>
+              <label class="role-option">
+                <input
+                  type="radio"
+                  th:field="*{role}"
+                  value="ORGANIZER"
+                  id="organizerRole"
+                  th:disabled="${signForm.role != 'ORGANIZER'}"
+                />
+                <div class="role-card">
+                  <i class="fa-solid fa-clipboard-list"></i>
+                  <span>Organizer</span>
+                </div>
+              </label>
             </div>
-        </div>
+          </div>
 
           <!-- Side-by-Side First & Last Name Grid -->
           <div class="name-grid">
@@ -120,6 +123,11 @@
                   required
                 />
               </div>
+              <p
+                th:if="${#fields.hasErrors('firstName')}"
+                data-th-errors="*{firstName}"
+                class="error-msg"
+              ></p>
             </div>
             <div class="input-group">
               <label for="lastName">Last Name</label>
@@ -133,6 +141,11 @@
                   required
                 />
               </div>
+              <p
+                th:if="${#fields.hasErrors('lastName')}"
+                data-th-errors="*{lastName}"
+                class="error-msg"
+              ></p>
             </div>
           </div>
 
@@ -148,12 +161,19 @@
                 required
               />
             </div>
+            <p
+              th:if="${#fields.hasErrors('email')}"
+              data-th-errors="*{email}"
+              class="error-msg"
+            ></p>
           </div>
 
           <div class="input-group">
             <label for="password">Password</label>
+
             <div class="input-wrapper">
               <i class="fa-solid fa-lock input-icon"></i>
+
               <input
                 type="password"
                 id="password"
@@ -161,9 +181,22 @@
                 placeholder="Create a password"
                 required
               />
+
+              <!-- Eye Icon -->
+              <i
+                class="fa-solid fa-eye toggle-password"
+                onclick="togglePasswordVisibility()"
+              ></i>
             </div>
 
-            <div class="input-group">
+            <p
+              th:if="${#fields.hasErrors('password')}"
+              data-th-errors="*{password}"
+              class="error-msg"
+            ></p>
+          </div>
+
+          <div class="input-group">
             <label for="phone Number">Phone Number</label>
             <div class="input-wrapper">
               <i class="fa-solid fa-lock input-icon"></i>
@@ -175,12 +208,12 @@
                 required
               />
             </div>
+            <p
+              th:if="${#fields.hasErrors('phoneNumber')}"
+              data-th-errors="*{phoneNumber}"
+              class="error-msg"
+            ></p>
           </div>
-
-          <!-- Terms and Conditions -->
-          <label class="terms-checkbox">
-            <input type="checkbox" required />
-          </label>
 
           <button type="submit" class="btn-dark-solid">
             Create Account <i class="fa-solid fa-arrow-right"></i>
@@ -193,5 +226,7 @@
         </p>
       </div>
     </div>
+    <div th:replace="~{fragments/message :: messageBox}"></div>
   </body>
+  <script src="/js/signUp.js"></script>
 </html>

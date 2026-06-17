@@ -26,37 +26,31 @@ import lombok.Setter;
 @Table(name="users")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Builder
-@Data
-public class User implements UserDetails{
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="user_first",nullable=false)
+    @Column(name="user_first", nullable=false)
     private String firstName;
 
-    @Column(name="user_last",nullable=false)
+    @Column(name="user_last", nullable=false)
     private String lastName;
 
-    @Column(unique=true,nullable=false)
+    @Column(unique=true, nullable=false)
     private String email;
-
 
     private String password;
 
-    @Column(unique=true,length=255)
+    @Column(unique=true, length=255)
     private String phoneNumber;
 
-    
     private String role;
 
-
     @Builder.Default
-    @Enumerated(value=EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Provider provider = Provider.SELF;
 
     private String providerUserId;
@@ -70,12 +64,114 @@ public class User implements UserDetails{
     @Builder.Default
     private boolean phoneVerified = false;
 
+    // ===== Getters =====
+
+    public int getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public String getProviderUserId() {
+        return providerUserId;
+    }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public boolean getPhoneVerified() {
+        return phoneVerified;
+    }
+
+    // ===== Setters =====
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
+    public void setProviderUserId(String providerUserId) {
+        this.providerUserId = providerUserId;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public void setPhoneVerified(boolean phoneVerified) {
+        this.phoneVerified = phoneVerified;
+    }
+
+    // ===== UserDetails Methods =====
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Dynamically add the "ROLE_" prefix so that "PLAYER" becomes "ROLE_PLAYER"
-        // This makes Spring Security's .hasRole() methods work perfectly!
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + this.role);
-        
+        SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority("ROLE_" + this.role);
+
         return List.of(authority);
     }
 
@@ -85,29 +181,22 @@ public class User implements UserDetails{
     }
 
     @Override
-    public boolean isAccountNonExpired(){
-        return true;
-    }
-
-    
-    @Override
-    public boolean isAccountNonLocked(){
+    public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
-    public boolean isCredentialsNonExpired(){
+    public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
-    public boolean isEnabled(){
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
         return this.enabled;
     }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
 }

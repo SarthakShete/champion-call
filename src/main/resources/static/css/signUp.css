@@ -189,22 +189,86 @@ body.auth-body {
   margin-bottom: 8px;
   display: block;
 }
+/* Role Buttons */
+
+/* 1. Base state for SELECTED card (Ultra-Minimal) */
+.role-option input[type="radio"]:checked + .role-card {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.4); 
+  background: transparent;
+  box-shadow: none; 
+  transform: translateY(-2px);
+}
+
+/* Flat white text and icon */
+.role-option input[type="radio"]:checked + .role-card i,
+.role-option input[type="radio"]:checked + .role-card span {
+  color: #ffffff;
+  text-shadow: none; 
+}
+
+/* 2. Hover effect strictly on the SELECTED card */
+.role-option input[type="radio"]:checked + .role-card:hover {
+  border-color: #ffffff; 
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1); 
+  transform: translateY(-4px);
+  cursor: pointer;
+}
+
+/* 3. The "Locked" UNSELECTED card (Faded gray) */
+.role-selector:has(input[type="radio"]:checked) .role-option:has(input[type="radio"]:not(:checked)) .role-card {
+  opacity: 0.35;
+  filter: grayscale(1);
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+/* 4. Hover effect on the LOCKED card (Red Warning) */
+.role-selector:has(input[type="radio"]:checked) .role-option:has(input[type="radio"]:not(:checked)):hover .role-card {
+  opacity: 0.8; 
+  filter: grayscale(0); 
+  border-color: #222; /* Keeps the border exactly the same as the resting state */
+  background: rgba(255, 68, 68, 0.05); /* Very slight red tint */
+  box-shadow: none; /* Removed the outer glow to keep the edges clean */
+  cursor: not-allowed;
+}
+
+/* Make the icon and text turn red to emphasize the warning */
+.role-selector:has(input[type="radio"]:checked) .role-option:has(input[type="radio"]:not(:checked)):hover .role-card i,
+.role-selector:has(input[type="radio"]:checked) .role-option:has(input[type="radio"]:not(:checked)):hover .role-card span {
+  color: #ff4444;
+}
+
+
+
 
 /* Disabled card — faded */
-.role-option input[type="radio"]:disabled + .role-card {
-  opacity: 0.35;
+/* .role-option input[type="radio"]:disabled + .role-card {
+  opacity: 1;
   cursor: not-allowed;
   background: rgba(255, 255, 255, 0.01);
   border-color: #222;
-}
+} */
 
 /* Disabled card hover — red warning */
-.role-option input[type="radio"]:disabled + .role-card:hover {
+/* .role-option input[type="radio"]:disabled + .role-card:hover {
   box-shadow: 0 0 0 2px rgba(255, 80, 80, 0.5);
   border-color: rgba(255, 80, 80, 0.5);
   transform: none;
   cursor: not-allowed;
+} */
+
+/* 4. Hover effect on the LOCKED card (Red Warning) */
+.role-selector:has(input[type="radio"]:checked)
+  .role-option:has(input[type="radio"]:not(:checked)):hover
+  .role-card {
+  border-color: rgba(255, 80, 80, 0.8);
+  box-shadow: 0 0 15px rgba(255, 80, 80, 0.3);
+  background: rgba(255, 80, 80, 0.05);
+  cursor: not-allowed;
 }
+
 
 /* =========================================
    FORM INPUTS
@@ -294,7 +358,31 @@ body.auth-body {
   color: #fff;
   text-decoration: underline;
 }
+.input-wrapper {
+  position: relative;
+}
 
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+}
+
+#password {
+  width: 100%;
+  padding-left: 40px;
+  padding-right: 40px;
+}
 /* =========================================
    SIGN UP BUTTON
    ========================================= */
@@ -344,4 +432,13 @@ body.auth-body {
 .text-orange-link:hover {
   color: #fff;
   text-decoration: underline;
+}
+
+.error-msg {
+  color: #ff4d4d; /* slightly softer red */
+  font-size: 0.78rem; /* smaller than input text */
+  margin-top: 6px; /* breathing room from input */
+  display: block;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
 }
