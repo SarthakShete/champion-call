@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <link rel="stylesheet" th:href="@{/css/tournament/tournamentList.css}" />
+      
+  </head>
+  <body>
+    <div class="cards-inner" th:fragment="tournament-grid">
+      <th:block
+        th:if="${tournaments != null and not #lists.isEmpty(tournaments)}"
+      >
+        <div class="t-card" th:each="t : ${tournaments}" th:if="${t.published}">
+          <div class="t-card-img" th:style="${t.backgroundStyle}">
+            <span
+              class="status-badge"
+              th:classappend="${t.status.name() == 'REGISTRATION_OPEN' ? 'open' : (t.status.name() == 'UPCOMING' ? 'upcoming' : 'ongoing')}"
+              th:text="${t.status}"
+            >
+              Status
+            </span>
+          </div>
+
+          <div class="t-card-body">
+            <span
+              class="sport-label"
+              th:classappend="${t.sport != null ? t.sport.toLowerCase() : ''}"
+              th:text="${t.sport}"
+            >
+              Sport
+            </span>
+
+            <h3 class="t-card-title" th:text="${t.tournamentName}">
+              Tournament Title
+            </h3>
+
+            <p
+              class="t-card-org"
+              th:text="${t.organizer != null && t.organizer.organizationName != null} ? 'by ' + ${t.organizer.organizationName} : 'by ChampionCall'"
+            >
+              by ChampionCall
+            </p>
+
+            <div class="t-card-meta">
+              <div class="meta-row">
+                <i class="fa-regular fa-calendar"></i>
+                <span th:text="${t.startDate} + ' – ' + ${t.endDate}"
+                  >Dates</span
+                >
+              </div>
+
+              <div class="meta-row">
+                <i class="fa-solid fa-location-dot"></i>
+                <span th:text="${t.venueLocation}">Location</span>
+              </div>
+
+              <div class="meta-row">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+                <span th:text="'₹' + ${t.entryFee} + ' / team'">Fee</span>
+              </div>
+            </div>
+
+            <a
+              th:href="@{/api/organizer/tournament/tournament-details/{id}(id=${t.id})}"
+            >
+              <button class="btn-view" type="button">View Details</button>
+            </a>
+          </div>
+        </div>
+      </th:block>
+
+      <div
+        th:if="${tournaments == null or #lists.isEmpty(tournaments)}"
+        class="no-results"
+        style="
+          padding: 40px;
+          color: white;
+          text-align: center;
+          grid-column: 1 / -1;
+        "
+      >
+        <i
+          class="fa-solid fa-face-sad-tear"
+          style="font-size: 36px; margin-bottom: 10px; color: #888"
+        ></i>
+        <p>No tournaments found matching these filters.</p>
+      </div>
+
+      <!-- Pagination Bar placed INSIDE the fragment so it re-renders cleanly on AJAX updates -->
+      <div class="pagination-container" th:if="${totalPages > 1}">
+        <div class="pagination">
+          <!-- Previous Button -->
+          <button
+            type="button"
+            class="page-btn prev-next"
+            th:disabled="${!hasPrevious}"
+            th:onclick="'fetchTournaments(' + (${currentPage} - 1) + ')'"
+          >
+            <i class="fa-solid fa-chevron-left"></i> Prev
+          </button>
+
+          <!-- Page Numbers Loop -->
+          <div class="page-numbers">
+            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+              <button
+                type="button"
+                class="page-btn"
+                th:classappend="${i == currentPage} ? 'active' : ''"
+                th:text="${i + 1}"
+                th:onclick="'fetchTournaments(' + ${i} + ')'"
+              ></button>
+            </th:block>
+          </div>
+
+          <!-- Next Button -->
+          <button
+            type="button"
+            class="page-btn prev-next"
+            th:disabled="${!hasNext}"
+            th:onclick="'fetchTournaments(' + (${currentPage} + 1) + ')'"
+          >
+            Next <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

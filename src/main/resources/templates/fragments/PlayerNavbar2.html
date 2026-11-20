@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <header class="topbar" th:fragment="playerNavbar(userName, avatarUrl)">
+      <div class="topbar-left">
+        <div class="navbar-logo-container">
+          <img
+            th:src="@{/Images/champion.webp}"
+            alt="Logo"
+            class="custom-logo"
+          />
+          <span class="brand-title"
+            >CHAMPION<span class="highlight">CALL</span></span
+          >
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button class="icon-btn">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="icon-btn">
+          <i class="fa-regular fa-envelope"></i>
+        </button>
+
+        <!-- Profile Menu Container -->
+        <div class="profile-menu-container">
+          <div class="profile-menu" id="profileDropdownToggle">
+            <img th:src="${avatarUrl}" alt="Profile" />
+            <div class="profile-info">
+              <h4 th:text="${userName}">Jay Kumar</h4>
+            </div>
+            <i class="fa-solid fa-chevron-down" id="dropdownChevron"></i>
+          </div>
+
+          <!-- Dropdown Menu -->
+          <div id="profileDropdownMenu" class="profile-dropdown">
+            <a th:href="@{/api/player/profile}">
+              <i class="fa-solid fa-chart-line"></i> Dashboard
+            </a>
+            <a th:href="@{/do-logout}" class="logout-link">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+  </body>
+</html>

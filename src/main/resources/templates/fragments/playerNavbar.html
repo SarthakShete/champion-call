@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <header class="topbar" th:fragment="topbar(userName, avatarUrl)">
+      <div class="topbar-left">
+        <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+        <div
+          class="logo"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 15px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+          "
+        ></div>
+      </div>
+
+      <div class="topbar-right">
+        <button class="icon-btn">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="icon-btn">
+          <i class="fa-regular fa-envelope"></i>
+        </button>
+
+        <!-- WRAPPER CONTAINER WITH POSITION: RELATIVE -->
+        <div class="profile-menu-c ontainer" style="position: relative">
+          <!-- Profile Trigger with id="profileDropdownToggle" -->
+          <div
+            class="profile-menu"
+            id="profileDropdownToggle"
+            style="cursor: pointer"
+          >
+            <img th:src="${avatarUrl}" alt="Profile" />
+            <div class="profile-info">
+              <h4 th:text="${userName}">Jay Kumar</h4>
+            </div>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+
+          <!-- Dropdown Menu nested securely inside the relative parent -->
+          <div id="profileDropdownMenu" class="profile-dropdown">
+            <a th:href="@{/api/player/profile}" id="menuDashboardBtn">
+              <i class="fa-solid fa-chart-line" style="color: #f97316"></i>
+              Dashboard
+            </a>
+            <a th:href="@{/logout}">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+  </body>
+</html>

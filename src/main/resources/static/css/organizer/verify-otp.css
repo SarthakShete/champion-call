@@ -1,0 +1,229 @@
+:root {
+  --bg-main: #151518; /* Deep dark background */
+  --bg-card: #1c1c21; /* Slightly lighter dark for card */
+  --primary: #ff914d; /* ChampionCall Orange */
+  --primary-hover: #e57f3d; /* Darker orange for hover states */
+  --text-main: #ffffff; /* White text */
+  --text-muted: #a0a0ab; /* Muted gray text */
+  --border-color: #2e2e38; /* Subtle borders */
+  --error: #ef4444; /* Error red */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Top Brand Logo styling */
+.brand-header {
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.brand-header span {
+  color: var(--primary);
+}
+
+/* Stepper Progress Indicator */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+
+.step {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 2px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.step.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(255, 145, 77, 0.1);
+}
+
+.step.completed {
+  background: var(--border-color);
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: var(--border-color);
+}
+
+/* Container Card Box */
+.otp-container {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.timer-display {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* Flash Error Message styling */
+.alert-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--error);
+  color: var(--error);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Numeric OTP input configuration */
+.otp-input {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255, 145, 77, 0.15);
+}
+
+.otp-input:disabled {
+  background-color: #222226;
+  border-color: #2e2e38;
+  color: #55555d;
+  cursor: not-allowed;
+}
+
+/* Action Buttons */
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--primary);
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.btn-submit:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-submit:active {
+  transform: scale(0.98);
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: var(--primary);
+}
+/* Small localized utility extensions for the resend layout links */
+.resend-box {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.resend-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+.resend-link:hover {
+  text-decoration: underline;
+  color: var(--primary-hover);
+}
+.toast-msg {
+  font-size: 0.85rem;
+  margin-top: 8px;
+  font-weight: 500;
+}

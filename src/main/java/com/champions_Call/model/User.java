@@ -7,20 +7,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.champions_Call.model.organizer.OrganizerProfile;
+import com.champions_Call.model.player.PlayerProfile;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name="users")
@@ -32,6 +25,12 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private OrganizerProfile organizerProfile;
+
+    @OneToOne(mappedBy="user", cascade=CascadeType.ALL)
+    private PlayerProfile playerProfile;
 
     @Column(name="user_first", nullable=false)
     private String firstName;
@@ -49,21 +48,21 @@ public class User implements UserDetails {
 
     private String role;
 
+    @Column(name = "profile_pic", length = 1000)
+    private String profilePic;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private Provider provider = Provider.SELF;
 
     private String providerUserId;
 
-    @Builder.Default
-    private boolean enabled = true;
+    
 
     @Builder.Default
     private boolean emailVerified = false;
 
-    @Builder.Default
-    private boolean phoneVerified = false;
-
+    
     // ===== Getters =====
 
     public int getId() {
@@ -102,17 +101,15 @@ public class User implements UserDetails {
     public String getProviderUserId() {
         return providerUserId;
     }
-
-    public boolean getEnabled() {
-        return enabled;
-    }
-
     public boolean getEmailVerified() {
         return emailVerified;
     }
 
-    public boolean getPhoneVerified() {
-        return phoneVerified;
+    public String getProfilePic() {
+        return profilePic;
+    }
+    public OrganizerProfile getOrganizerProfile() {
+        return organizerProfile;
     }
 
     // ===== Setters =====
@@ -153,24 +150,30 @@ public class User implements UserDetails {
         this.providerUserId = providerUserId;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
 
-    public void setPhoneVerified(boolean phoneVerified) {
-        this.phoneVerified = phoneVerified;
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
+    public void setOrganizerProfile(OrganizerProfile organizerProfile) {
+        this.organizerProfile = organizerProfile;
+    }
+
+
+    // @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // private OrganizerProfile organizerProfile;
+
+    // @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // private PlayerProfile playerProfile;
 
     // ===== UserDetails Methods =====
 
-    @Override
+    @Override   
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =
-                new SimpleGrantedAuthority("ROLE_" + this.role);
+                new SimpleGrantedAuthority("ROLE_" + this.role.toUpperCase());
 
         return List.of(authority);
     }
@@ -197,6 +200,14 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.enabled;
+        return true; 
+    }
+
+    public PlayerProfile getPlayerProfile() {
+        return playerProfile;
+    }
+
+    public void setPlayerProfile(PlayerProfile playerProfile) {
+        this.playerProfile = playerProfile;
     }
 }

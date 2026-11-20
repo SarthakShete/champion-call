@@ -1,0 +1,29 @@
+<!-- Fonts used by the scorekeeper UI. If your main layout already loads
+     these two families, you can delete this line. -->
+
+<!-- Fonts used by the scorekeeper UI -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+/>
+
+<!-- Main scorekeeper styles -->
+<link rel="stylesheet" th:href="@{/css/fragments/Managing_Scoring.css}" />
+
+<div th:fragment="content" class="cc-wrap">
+  <div
+    id="scorekeeperRoot"
+    class="cc-root"
+    data-role="SCORER"
+    th:attr="data-match-id=${matchId}, data-scorekeeper=${scorerName}"
+  ></div>
+  <!-- Squads.js mounts the popup here -->
+  <div id="squadsRoot" class="cc-root"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script th:src="@{/js/fragments/Managing_Scoring/Managing_Scoring.js}"></script>
+<script
+  th:src="@{/js/fragments/Managing_Scoring/cricket-websocket.js}"
+></script>

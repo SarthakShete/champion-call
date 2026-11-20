@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Your Identity - Champion Call</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/organizer/onboarding.css" />
+  </head>
+  <body>
+    <div class="onboard-page">
+      <div class="onboard-logo">
+        <img
+          th:src="@{/Images/champion.webp}"
+          alt="ChampionCall Logo"
+          class="custom-logo"
+        />
+        <span>CHAMPION<span class="accent">CALL</span></span>
+      </div>
+
+      <div class="step-tracker">
+        <div class="step-dot done"><i class="fa-solid fa-check"></i></div>
+        <div class="step-line done"></div>
+        <div class="step-dot active"><span>2</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span>3</span></div>
+      </div>
+
+      <div class="onboard-card">
+        <div class="onboard-header">
+          <span class="step-label">STEP 2 OF 3</span>
+          <h1>Verify Your Identity</h1>
+          <p>Required before you can publish a tournament</p>
+        </div>
+
+        <div class="why-banner">
+          <i class="fa-solid fa-shield-halved"></i>
+          <p>
+            This protects players from fake organizers. Your tournament fees are
+            held securely until verification is approved.
+          </p>
+        </div>
+
+        <form
+          class="onboard-form"
+          method="post"
+          id="identityForm"
+          th:action="@{/api/organizer/do-Identity}"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group">
+            <label for="idType">ID Type <span class="required">*</span></label>
+            <select id="idType" name="idType" required>
+              <option value="" selected disabled>Select document type</option>
+              <option value="AADHAR">Aadhar Card</option>
+              <option value="PAN">PAN Card</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="idNumber"
+              >ID Number <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              id="idNumber"
+              name="idNumber"
+              placeholder="Enter your Aadhar or PAN number"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Upload Document <span class="required">*</span></label>
+            <label for="idDocument" class="upload-dropzone">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <span class="upload-title">Click to upload or drag and drop</span>
+              <span class="upload-hint">PNG, JPG or PDF — max 5MB</span>
+              <span class="upload-filename" id="fileNameDisplay"></span>
+            </label>
+            <input
+              type="file"
+              id="idDocument"
+              name="idDocument"
+              accept=".png,.jpg,.jpeg,.pdf"
+              hidden
+              required
+            />
+          </div>
+
+          <button
+            type="button"
+            class="btn-primary-action"
+            onclick="submitForm()"
+          >
+            Submit for Verification <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="status-row pending">
+          <i class="fa-solid fa-clock"></i>
+          <span>Verification typically takes 24–48 hours</span>
+        </div>
+      </div>
+
+      <div class="onboard-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <p>
+          You can still browse and manage drafts while verification is pending —
+          but publishing stays locked until approved.
+        </p>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/organizer/Identity_Info.js}"></script>
+  </body>
+</html>

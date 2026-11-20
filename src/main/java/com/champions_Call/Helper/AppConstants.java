@@ -10,9 +10,15 @@ public class AppConstants {
     public static final String ROLE_ORGANIZER = "ORGANIZER";
     public static final String ROLE_ADMIN = "ADMIN";
 
+    // Profile Photo 
+    public static final int CONTACT_IMAGE_WIDTH = 500;
+
+    public static final int CONTACT_IMAGE_HEIGHT = 500;
+
+    public static final String CONTACT_IMAGE_CROP = "fill";
 
     // Default Pagination Size (Very useful for later when we list tournaments or players)
-    public static final String DEFAULT_PAGE_SIZE = "10";
+    public static final String PAGE_SIZE = "9";
 
 }
 

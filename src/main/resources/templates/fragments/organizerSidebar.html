@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <nav
+      th:fragment="organizerSidebar(activePage,organizerProfile)"
+      class="sidebar-menu"
+    >
+      <div class="menu-label">Main</div>
+
+      <a
+        th:href="@{/api/organizer/dashboard}"
+        class="menu-item"
+        th:classappend="${activePage == 'dashboard'} ? 'active' : ''"
+      >
+        <i class="fa-solid fa-chart-pie"></i><span>Dashboard</span>
+      </a>
+
+      <a th:href="@{/api/organizer/tournament/myTournaments}" class="menu-item">
+        <i class="fa-solid fa-calendar-days"></i><span>My Tournaments</span>
+      </a>
+
+      <a
+        th:href="@{/api/organizer/tournament/new}"
+        class="menu-item"
+        th:classappend="${activePage == 'create'} ? 'active' : ''"
+        th:attr="onclick=${organizerProfile != null and organizerProfile.completeProfile} 
+             ? null 
+             : 'completeProfile(event); return false;'"
+      >
+        <i class="fa-solid fa-circle-plus"></i><span>Create Tournament</span>
+      </a>
+
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-gift"></i><span>Prizes & Awards</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-users-viewfinder"></i><span>Registrations</span
+        ><span class="badge">12</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-diagram-project"></i
+        ><span>Fixtures & Scheduling</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-tower-broadcast"></i><span>Live Score</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-people-group"></i><span>Teams</span>
+      </a>
+
+      <div class="menu-label">Business</div>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-wallet"></i><span>Payments & Revenue</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-chart-line"></i><span>Analytics</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-star"></i><span>Reviews</span>
+      </a>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-bell"></i><span>Notifications</span
+        ><span class="badge alert">5</span>
+      </a>
+    </nav>
+  </body>
+</html>

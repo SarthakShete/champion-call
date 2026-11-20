@@ -62,7 +62,7 @@
           <span>OR SIGN IN WITH EMAIL</span>
         </div>
 
-        <form th:action="@{/login}" method="POST" class="auth-form">
+        <form th:action="@{/authenticate}" method="POST" class="auth-form">
           <div class="input-group">
             <label for="email">Email Address</label>
             <div class="input-wrapper">
@@ -70,7 +70,7 @@
               <input
                 type="email"
                 id="email"
-                name="username"
+                name="email"
                 placeholder="player@championcall.com"
                 required
               />
@@ -93,6 +93,8 @@
               />
             </div>
           </div>
+
+          <input type="hidden" name="remember-me" value="true" />
 
           <button type="submit" class="btn-dark-solid">
             Sign In <i class="fa-solid fa-arrow-right"></i>

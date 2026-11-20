@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complete Your Profile - Champion Call</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/player/playerProfileCompletion.css}"
+    />
+  </head>
+  <body>
+    <div class="onboard-page">
+      <div class="onboard-logo">
+        <i class="fa-solid fa-trophy"></i>
+        <span>CHAMPION<span class="accent">CALL</span></span>
+      </div>
+
+      <!-- ==========================================
+                STEP TRACKER (updated live by JS)
+                Now 4 steps: Basic Info -> Athletic -> ID Proof -> Bio
+        =========================================== -->
+      <div class="step-tracker" id="stepTracker">
+        <div class="step-dot active" data-step="1"><span>1</span></div>
+        <div class="step-line" data-line="1"></div>
+        <div class="step-dot" data-step="2"><span>2</span></div>
+        <div class="step-line" data-line="2"></div>
+        <div class="step-dot" data-step="3"><span>3</span></div>
+        <div class="step-line" data-line="3"></div>
+        <div class="step-dot" data-step="4"><span>4</span></div>
+      </div>
+
+      <div class="onboard-card">
+        <!-- Single form spanning all 4 steps -->
+        <form
+          class="onboard-form"
+          id="onboardForm"
+          th:action="@{/api/player/setup}"
+          th:object="${playerProfile}"
+          method="post"
+          enctype="multipart/form-data"
+          novalidate
+        >
+          <input
+            type="hidden"
+            id="hiddenStep"
+            th:value="${playerProfile.currentStep != null ? playerProfile.currentStep : 1}"
+          />
+          <!-- ==========================================
+                    STEP 1 - BASIC INFO
+            =========================================== -->
+          <div class="onboard-step" data-step="1">
+            <div class="onboard-header">
+              <span class="step-label">STEP 1 OF 4</span>
+              <h1>Complete Your Player Profile</h1>
+              <p>Provide your details to get started with tournaments</p>
+            </div>
+
+            <div class="avatar-upload-block">
+              <div class="avatar-circle" id="avatarCircle">
+                <span id="avatarInitials">AM</span>
+                <img
+                  id="avatarPreview"
+                  src=""
+                  alt="Profile photo"
+                  style="display: none"
+                />
+              </div>
+              <label for="photoUpload" class="photo-upload-label">
+                <i class="fa-solid fa-camera"></i> Add photo (optional)
+              </label>
+              <input
+                type="file"
+                id="photoUpload"
+                th:field="*{profileImage}"
+                name="profilePhoto"
+                accept="image/*"
+                hidden
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="fullName"
+                >Full Name <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="fullName"
+                th:field="*{fullName}"
+                placeholder="Aarav Mehta"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="username"
+                >Display Name / Username <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="username"
+                th:field="*{username}"
+                placeholder="AaravM"
+                required
+              />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dob"
+                  >Date of Birth <span class="required">*</span></label
+                >
+                <input
+                  type="date"
+                  id="dob"
+                  th:field="*{dateOfBirth}"
+                  required
+                />
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label for="city"
+                  >City / Location <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="city"
+                  th:field="*{city}"
+                  placeholder="Pune"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="phoneNumber"
+                >Phone Number / WhatsApp <span class="required">*</span></label
+              >
+              <input
+                type="tel"
+                id="phoneNumber"
+                th:field="*{phoneNumber}"
+                placeholder="+91 98765 43210"
+                required
+              />
+            </div>
+
+            <div class="step-btn-row">
+              <button
+                type="button"
+                class="btn-primary-action step-save-next-btn"
+                data-current-step="1"
+                data-goto="2"
+              >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save &amp; Next
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <!-- END STEP 1 -->
+
+          <!-- ==========================================
+                    STEP 2 - ATHLETIC INFO
+            =========================================== -->
+          <div class="onboard-step" data-step="2" style="display: none">
+            <div class="onboard-header">
+              <span class="step-label">STEP 2 OF 4</span>
+              <h1>Athletic Profile</h1>
+              <p>Help organizers find you for the right team</p>
+            </div>
+
+            <div class="form-group">
+              <label for="primarySport"
+                >Primary Sport <span class="required">*</span></label
+              >
+              <select
+                id="primarySport"
+                th:field="*{primarySport}"
+                name="primarySport"
+                required
+              >
+                <option value="" selected disabled>Select your sport</option>
+                <option value="CRICKET">Cricket</option>
+                <option value="FOOTBALL">Football</option>
+                <option value="KABADDI">Kabaddi</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="playerRole"
+                >Player Role / Position <span class="required">*</span></label
+              >
+              <select
+                id="playerRole"
+                th:field="*{playerRole}"
+                name="playerRole"
+                required
+              >
+                <option value="" disabled selected>
+                  Select a sport first...
+                </option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="skillLevel"
+                  >Skill Level <span class="required">*</span></label
+                >
+                <select
+                  id="skillLevel"
+                  th:field="*{skillLevel}"
+                  name="skillLevel"
+                  required
+                >
+                  <option value="BEGINNER">Beginner</option>
+                  <option value="INTERMEDIATE">Intermediate</option>
+                  <option value="PROFESSIONAL">Professional</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="preferredSide"
+                  >Preferred Side <span class="required">*</span></label
+                >
+                <select
+                  id="preferredSide"
+                  th:field="*{preferredSide}"
+                  name="preferredSide"
+                  required
+                >
+                  <option value="LEFT">Left</option>
+                  <option value="RIGHT">Right</option>
+                  <option value="BOTH">Both</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="onboard-note">
+              <i class="fa-solid fa-circle-info"></i>
+              <p>
+                Your athletic profile helps you appear in search results when
+                organizers are scouting for players to complete their squads.
+              </p>
+            </div>
+
+            <div class="step-btn-row">
+              <button
+                type="button"
+                class="btn-secondary-action step-back-btn"
+                data-goto="1"
+              >
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button
+                type="button"
+                class="btn-primary-action step-save-next-btn"
+                data-current-step="2"
+                data-goto="3"
+              >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save &amp; Next
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <!-- END STEP 2 -->
+
+          <!-- ==========================================
+                    STEP 3 - ID PROOF (NEW)
+            =========================================== -->
+          <div class="onboard-step" data-step="3" style="display: none">
+            <div class="onboard-header">
+              <span class="step-label">STEP 3 OF 4</span>
+              <h1>Identity Verification</h1>
+              <p>Verify your identity so organizers can trust your profile</p>
+            </div>
+
+            <div class="form-group">
+              <label for="idType"
+                >ID Type <span class="required">*</span></label
+              >
+              <select id="idType" th:field="*{idType}" name="idType" required>
+                <option value="" selected disabled>Select document type</option>
+                <option value="AADHAR">Aadhar Card</option>
+                <option value="PAN">PAN Card</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="idNumber"
+                >ID Number <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="idNumber"
+                th:field="*{idNumber}"
+                name="idNumber"
+                placeholder="Enter your Aadhar or PAN number"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Upload Document <span class="required">*</span></label>
+              <label for="idDocument" class="upload-dropzone">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span class="upload-title"
+                  >Click to upload or drag and drop</span
+                >
+                <span class="upload-hint">PNG, JPG or PDF — max 5MB</span>
+                <span class="upload-filename" id="fileNameDisplay"></span>
+              </label>
+              <input
+                type="file"
+                id="idDocument"
+                th:field="*{idDocument}"
+                name="idDocument"
+                accept=".png,.jpg,.jpeg,.pdf"
+                hidden
+              />
+            </div>
+
+            <div class="onboard-note">
+              <i class="fa-solid fa-shield-halved"></i>
+              <p>
+                Your ID document is used only for verification and is never
+                shown publicly on your profile.
+              </p>
+            </div>
+
+            <div class="step-btn-row">
+              <button
+                type="button"
+                class="btn-secondary-action step-back-btn"
+                data-goto="2"
+              >
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button
+                type="button"
+                class="btn-primary-action step-save-next-btn"
+                data-current-step="3"
+                data-goto="4"
+              >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save &amp; Next
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+          <!-- END STEP 3 -->
+
+          <!-- ==========================================
+                    STEP 4 - BIO & EXPERIENCE
+            =========================================== -->
+          <div class="onboard-step" data-step="4" style="display: none">
+            <div class="onboard-header">
+              <span class="step-label">STEP 4 OF 4</span>
+              <h1>Almost There</h1>
+              <p>Add your professional details</p>
+            </div>
+
+            <div class="form-group">
+              <label for="bio">Professional Bio</label>
+              <textarea
+                id="bio"
+                th:field="*{bio}"
+                rows="3"
+                placeholder="Tell organizers about your playing style..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="yearsOfExperience">Years of Experience</label>
+              <input
+                type="number"
+                id="yearsOfExperience"
+                th:field="*{yearsOfExperience}"
+                placeholder="e.g. 8"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="currentStatus"
+                >Current Status <span class="required">*</span></label
+              >
+              <select id="currentStatus" th:field="*{currentStatus}" required>
+                <option value="ACTIVE">Active / Playing</option>
+                <option value="INACTIVE">Taking a Break</option>
+                <option value="RETIRED">Retired</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Key Strengths (Select all that apply)</label>
+              <div id="strengthGrid" class="strength-grid">
+                <!-- Cards injected by JS, based on Step 2's chosen sport -->
+              </div>
+              <input
+                type="text"
+                th:field="*{otherStrength}"
+                id="otherStrength"
+                name="otherStrength"
+                class="other-strength-input"
+                placeholder="Or type another strength..."
+              />
+            </div>
+
+            <div class="step-btn-row">
+              <button
+                type="button"
+                class="btn-secondary-action step-back-btn"
+                data-goto="3"
+              >
+                <i class="fa-solid fa-arrow-left"></i> Back
+              </button>
+              <button
+                type="button"
+                id="finalSaveBtn"
+                class="btn-primary-action"
+              >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save
+              </button>
+            </div>
+          </div>
+          <!-- END STEP 4 -->
+        </form>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      /* Convert the Java List to a JavaScript object */
+      const rawStrengths = /*[[${allStrengths}]]*/ [];
+
+      /* Transform it into the format your code needs */
+      const strengthsData = rawStrengths.reduce((acc, strength) => {
+        if (!acc[strength.sport]) acc[strength.sport] = [];
+        acc[strength.sport].push({ id: strength.id, name: strength.name });
+        return acc;
+      }, {});
+
+      console.log(strengthsData);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/player/playerProfileCompletion.js}"></script>
+  </body>
+</html>

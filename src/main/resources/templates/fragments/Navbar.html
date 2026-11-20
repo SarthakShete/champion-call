@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"></html>
+  <body>
+    <header th:fragment="header" class="site-header">
+      <nav class="navbar">
+        <div class="logo">
+          <img
+            th:src="@{/Images/champion.webp}"
+            alt="ChampionCall Logo"
+            class="custom-logo"
+          />
+          <span class="brand-text"
+            >CHAMPION<span class="highlight">CALL</span></span
+          >
+        </div>
+        <div class="nav-actions">
+          <a th:href="@{/login}" class="login-link">Login</a>
+          <a th:href="@{/signUp}" class="btn-signup">Sign Up</a>
+        </div>
+      </nav>
+    </header>
+  </body>
+</html>

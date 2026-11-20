@@ -48,3 +48,17 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+
+# Application secrets
+src/main/resources/application.properties
+
+# Environment variables
+.env
+.env.*
+
+# User uploaded files
+/uploads/
+
+# Logs
+*.log

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore Tournaments — ChampionCall</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" th:href="@{/css/tournament/tournamentList.css}" />
+    <link rel="stylesheet" th:href="@{/css/fragments/playerNavbar2.css}" />
+  </head>
+  <body>
+    <!-- 1. SHOW PLAYER NAVBAR IF LOGGED IN -->
+    <div th:if="${profile != null}">
+      <div
+        th:replace="~{fragments/PlayerNavbar2 :: playerNavbar(${profile.fullName}, ${profile.profileImage})}"
+      ></div>
+    </div>
+
+    <!-- 2. SHOW DEFAULT NAVBAR IF PROFILE IS NULL -->
+    <div th:unless="${profile != null}">
+      <nav class="navbar">
+        <div class="logo">
+          <img
+            th:src="@{/Images/champion.webp}"
+            alt="ChampionCall Logo"
+            class="custom-logo"
+          />
+          <span class="brand-text">
+            CHAMPION<span class="highlight">CALL</span>
+          </span>
+        </div>
+
+        <div class="nav-actions">
+          <!-- Guest state: not authenticated (Spectator) -->
+          <th:block sec:authorize="!isAuthenticated()">
+            <a th:href="@{/dashboard}" class="dashboard-link">
+              <i class="fa-solid fa-table-cells-large"></i> Dashboard
+            </a>
+            <a th:href="@{/login}" class="login-link">Login</a>
+            <a th:href="@{/signUp}" class="btn-signup">Sign Up</a>
+          </th:block>
+
+          <!-- Logged-in state: authenticated but profile is missing -->
+          <th:block sec:authorize="isAuthenticated()">
+            <a th:href="@{/api/player/setup}" class="dashboard-link">
+              <i class="fa-solid fa-table-cells-large"></i> Dashboard
+            </a>
+
+            <form th:action="@{/do-logout}" method="post" class="logout-form">
+              <button type="submit" class="btn-logout">
+                <svg
+                  class="logout-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M16 17l5-5-5-5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M21 12H9"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                Logout
+              </button>
+            </form>
+          </th:block>
+        </div>
+      </nav>
+    </div>
+
+    <section class="t-hero">
+      <div class="t-hero-inner">
+        <div class="t-badge">
+          <span class="t-badge-dot"></span> ChampionCall
+        </div>
+        <h1 class="t-hero-title">EXPLORE TOURNAMENTS</h1>
+        <p class="t-hero-sub">
+          Find local matches, register your team, and compete for glory.
+        </p>
+      </div>
+    </section>
+
+    <section class="filter-section">
+      <div class="filter-inner">
+        <!-- ADDED FORM WRAPPER HERE -->
+        <form id="filterForm" onsubmit="return false;">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              name="keyword"
+              id="tournamentSearch"
+              class="search-input"
+              placeholder="Search tournaments, cities, or organizers..."
+            />
+          </div>
+          <div class="filter-row">
+            <div class="chip-group" id="sportChipGroup">
+              <!-- Hidden input so the selected sport chip value gets submitted via FormData -->
+              <input
+                type="hidden"
+                name="sport"
+                id="selectedSportInput"
+                value=""
+              />
+              <button type="button" class="chip active" data-sport="all">
+                All
+              </button>
+              <button type="button" class="chip" data-sport="Cricket">
+                Cricket
+              </button>
+              <button type="button" class="chip" data-sport="Football">
+                Football
+              </button>
+              <button type="button" class="chip" data-sport="Kabaddi">
+                Kabaddi
+              </button>
+            </div>
+
+            <div class="dropdown-group">
+              <select
+                name="status"
+                id="statusFilterSelect"
+                class="filter-select"
+              >
+                <option value="ALL">All Status</option>
+                <option value="REGISTRATION_OPEN">Registration Open</option>
+                <option value="UPCOMING">Upcoming</option>
+                <option value="ONGOING">Ongoing</option>
+                <option value="COMPLETED">Completed</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="cards-section">
+      <div id="tournament-results-container">
+        <div th:replace="~{fragments/List_Tournament :: tournament-grid}"></div>
+      </div>
+    </section>
+
+    <!-- <section class="cards-section">
+      <div class="cards-inner">
+        <div
+          class="t-card"
+          th:each="t : ${tournaments}"
+          th:if="${t.status != 'UNPUBLISHED'}"
+        >
+          <div class="t-card-img" th:style="${t.backgroundStyle}">
+            <span
+              class="status-badge"
+              th:classappend="${t.status == 'REGISTRATION_OPEN' ? 'open' : (t.status == 'UPCOMING' ? 'upcoming' : 'ongoing')}"
+              th:text="${t.status}"
+              >Status</span
+            >
+          </div>
+          <div class="t-card-body">
+            <span
+              class="sport-label"
+              th:classappend="${t.sport != null ? t.sport.toLowerCase() : ''}"
+              th:text="${t.sport}"
+              >Sport</span
+            >
+            <h3 class="t-card-title" th:text="${t.tournamentName}">
+              Tournament Title
+            </h3>
+            <p
+              class="t-card-org"
+              th:text="${t.organizer != null && t.organizer.organizationName != null} ? 'by ' + ${t.organizer.organizationName} : 'by ChampionCall'"
+            >
+              by ChampionCall
+            </p>
+            <div class="t-card-meta">
+              <div class="meta-row">
+                <i class="fa-regular fa-calendar"></i>
+                <span th:text="${t.startDate} + ' – ' + ${t.endDate}"
+                  >Dates</span
+                >
+              </div>
+              <div class="meta-row">
+                <i class="fa-solid fa-location-dot"></i>
+                <span th:text="${t.venueLocation}">Location</span>
+              </div>
+              <div class="meta-row">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+                <span th:text="'₹' + ${t.entryFee} + ' / team'">Fee</span>
+              </div>
+            </div>
+            <a
+              th:href="@{/api/organizer/tournament/tournament-details/{id}(id=${t.id})}"
+            >
+              <button class="btn-view" type="button">View Details</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+    <script th:src="@{/js/organizer/tournamentList.js}"></script>
+    <script th:src="@{/js/fragments/playerNavbar2.js}"></script>
+  </body>
+</html>

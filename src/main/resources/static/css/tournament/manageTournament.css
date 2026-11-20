@@ -1,0 +1,3297 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0a0a0c;
+  --panel-bg: #131316;
+  --panel-border: #232327;
+  --orange: #ff9500;
+  --orange-light: #ffb84d;
+  --violet: #7c3aed;
+  --violet-light: #9d5cf5;
+  --text-white: #f5f5f5;
+  --text-gray: #8a8a92;
+  --text-muted: #5c5c64;
+  --green: #22c55e;
+  --green-bg: #102c21;
+  --red: #ef4444;
+  --red-bg: #351719;
+
+  /* =========================================================================
+     ALIASES — the "showMatches" fixtures block below (rounds-rail,
+     match-fixture-card, status badges, etc.) was authored against a
+     differently-named variable set. Rather than rewrite every rule,
+     alias those names onto the palette above so nothing silently
+     resolves to an undefined variable.
+     ========================================================================= */
+  --panel: var(--panel-bg);
+  --panel-2: #18181c;
+  --panel-3: #1a1a1d;
+  --border: var(--panel-border);
+  --border-soft: #1e1e24;
+  --text-hi: var(--text-white);
+  --text-mid: var(--text-gray);
+  --text-lo: var(--text-muted);
+  --orange-dim: rgba(255, 149, 0, 0.12);
+  --violet-dim: rgba(124, 58, 237, 0.12);
+  --blue: #60a5fa;
+  --blue-bg: #15243a;
+  --blue-dim: rgba(96, 165, 250, 0.12);
+  --green-dim: rgba(34, 197, 94, 0.15);
+  --yellow: #ffc857;
+  --yellow-bg: #33270e;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-white);
+  font-family: "Inter", sans-serif;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.app-shell {
+  display: flex;
+  min-height: calc(100vh - 70px);
+}
+
+/* ===== SIDEBAR (sits below the 70px navbar, supports collapse + mobile slide) ===== */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: #0d0d10;
+  border-right: 1px solid var(--panel-border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 70px);
+  transition: width 0.25s ease;
+}
+
+.sidebar.collapsed {
+  width: 76px;
+}
+.sidebar.collapsed .sidebar-link {
+  justify-content: center;
+  padding: 11px;
+}
+.sidebar.collapsed .sidebar-link span {
+  display: none;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+  flex: 1;
+}
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: var(--text-gray);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+.sidebar-link:hover {
+  background: #18181c;
+  color: var(--text-white);
+}
+.sidebar-link.active {
+  background: rgba(255, 149, 0, 0.12);
+  color: var(--orange);
+}
+.sidebar-link.active svg {
+  stroke: var(--orange);
+}
+
+.sidebar-footer {
+  padding: 12px;
+  border-top: 1px solid var(--panel-border);
+  margin-top: 12px;
+}
+.logout-link {
+  color: #ef4444;
+}
+.logout-link:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* ===== MAIN PAGE ===== */
+.page {
+  flex: 1;
+  padding: 32px 40px;
+  max-width: 1440px;
+  overflow-x: hidden;
+}
+
+/* Top bar */
+.topbar {
+  margin-bottom: 20px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-gray);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+.back-link:hover {
+  color: var(--text-white);
+}
+
+/* Header */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.title-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.page-title {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 44px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-style: italic;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.badge-live {
+  background: var(--orange);
+  color: #1a1a1a;
+}
+.badge-live .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1a1a1a;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn:hover {
+  opacity: 0.9;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-orange {
+  background: linear-gradient(135deg, var(--orange), var(--orange-light));
+  color: #1a1200;
+}
+.btn-violet {
+  background: var(--violet);
+  color: #fff;
+}
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--text-white);
+}
+.btn-outline-violet {
+  background: transparent;
+  border: 1px solid var(--violet);
+  color: var(--violet-light);
+}
+.btn-orange-outline {
+  background: rgba(255, 145, 77, 0.08); /* Subtle orange tint */
+  border: 1px solid rgba(255, 145, 77, 0.4); /* Clean semi-transparent border */
+  color: #ff914d;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out; /* Smooth transition for premium feel */
+}
+
+/* Premium Hover State */
+.btn-orange-outline:hover {
+  background: #ff914d; /* Solid vibrant orange fill */
+  border-color: #ff914d;
+  color: #000000; /* Turns text black for high contrast and readability */
+  box-shadow: 0 4px 15px rgba(255, 145, 77, 0.3); /* Soft glowing shadow */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+/* Click/Active State */
+.btn-orange-outline:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(255, 145, 77, 0.2);
+}
+
+/* Violet outline variant — used by the "Manual Creation" button */
+.btn-violet-outline {
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  color: var(--violet-light);
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+.btn-violet-outline:hover {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+.btn-violet-outline:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+}
+
+/* Wrapper for the pre-generation "+ Generate Fixtures" / "Manual Creation" pair */
+.pre-generation-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pre-generation-actions .btn-block {
+  flex: 1;
+  min-width: 200px;
+}
+
+.btn-danger {
+  background: #b91c1c;
+  color: #fff;
+}
+.btn-danger-outline {
+  background: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+
+/* Stat cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.stat-card-highlight {
+  border-color: var(--orange);
+  box-shadow: 0 0 20px rgba(255, 149, 0, 0.15);
+}
+.stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.stat-icon {
+  font-size: 22px;
+}
+.stat-fraction {
+  color: var(--text-gray);
+  font-size: 13px;
+}
+.stat-label {
+  color: var(--text-gray);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.stat-label-orange {
+  color: var(--orange);
+}
+.stat-value {
+  font-family: "Oswald", sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+}
+.stat-value-text {
+  font-size: 24px;
+  text-transform: uppercase;
+}
+.stat-value-orange {
+  color: var(--orange);
+  font-size: 30px;
+}
+.progress-track {
+  margin-top: 12px;
+  height: 5px;
+  background: #232327;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--orange);
+  border-radius: 3px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid var(--panel-border);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.tab {
+  background: none;
+  border: none;
+  color: var(--text-gray);
+  font-family: "Oswald", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 12px 2px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+.tab.active {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+}
+
+/* Tab panels */
+.tab-panel {
+  display: none;
+}
+.tab-panel.active {
+  display: block;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.col-main,
+.col-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0; /* FIX: grid items default to min-width:auto, which lets wide
+                   flex children (like the fixture builder rows) force this
+                   column — and everything after it — wider than the page. */
+}
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.panel-title {
+  font-family: "Oswald", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 18px;
+}
+.panel-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Quick actions */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.qa-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+.qa-btn-orange {
+  background: linear-gradient(135deg, var(--orange), var(--orange-light));
+  color: #1a1200;
+}
+.qa-btn-violet {
+  background: var(--violet);
+  color: #fff;
+}
+.qa-btn-outline {
+  background: #1a1a1e;
+  border: 1px solid var(--panel-border);
+  color: var(--text-white);
+}
+
+/* Alerts */
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.alert-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  background: #18181c;
+  border-radius: 8px;
+}
+.alert-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.dot-orange {
+  background: var(--orange);
+}
+.dot-violet {
+  background: var(--violet);
+}
+.dot-gray {
+  background: var(--text-muted);
+}
+.alert-text {
+  font-size: 14px;
+}
+.alert-time {
+  font-size: 12px;
+  color: var(--text-gray);
+  margin-top: 4px;
+}
+
+/* Status list */
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--text-gray);
+}
+.value-orange {
+  color: var(--orange);
+  font-weight: 700;
+}
+.value-white {
+  color: var(--text-white);
+  font-weight: 600;
+}
+.value-violet {
+  color: var(--violet-light);
+  font-weight: 700;
+}
+
+/* Table controls */
+.table-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #18181c;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text-gray);
+}
+.search-box input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-white);
+  font-size: 14px;
+  width: 100%;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.data-table th {
+  text-align: left;
+  color: var(--text-gray);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--panel-border);
+}
+.data-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #1c1c20;
+}
+.avatar-cell {
+  font-size: 20px;
+  width: 40px;
+}
+.name-cell {
+  font-weight: 600;
+}
+
+.status-pill {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.status-approved {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+}
+.status-pending {
+  background: rgba(255, 149, 0, 0.15);
+  color: var(--orange);
+}
+.status-rejected {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+}
+
+/* Schedule mini */
+.schedule-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.schedule-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-gray);
+  font-size: 14px;
+}
+
+/* Results */
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.result-item {
+  padding: 14px;
+  background: #18181c;
+  border-radius: 8px;
+  border-left: 3px solid var(--green);
+}
+.result-team {
+  font-weight: 700;
+  font-size: 14px;
+}
+.result-vs {
+  color: var(--text-gray);
+  font-size: 13px;
+  margin: 2px 0 8px;
+}
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.result-score {
+  color: var(--violet-light);
+  font-weight: 700;
+}
+.result-time {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* Fixtures */
+.fixtures-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.fixture-card {
+  background: #18181c;
+  border-radius: 10px;
+  padding: 16px;
+}
+.fixture-teams {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.fixture-vs {
+  color: var(--violet-light);
+  font-size: 12px;
+}
+.fixture-meta {
+  color: var(--text-gray);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.fixture-actions {
+  display: flex;
+  gap: 10px;
+}
+.btn-mini {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+.btn-mini-edit {
+  background: #2a2a2e;
+  color: var(--text-white);
+}
+.btn-mini-delete {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--red);
+}
+
+/* Top players */
+.top-players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.top-player-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tp-icon {
+  font-size: 20px;
+}
+.tp-info {
+  flex: 1;
+}
+.tp-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+.tp-record {
+  color: var(--text-gray);
+  font-size: 12px;
+}
+.tp-rank {
+  color: var(--violet-light);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Settings form */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.form-field-full {
+  margin-bottom: 22px;
+}
+.form-field label {
+  font-size: 12px;
+  color: var(--text-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-field input,
+.form-field textarea {
+  background: #18181c;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--text-white);
+  font-size: 14px;
+  outline: none;
+  font-family: "Inter", sans-serif;
+}
+.form-field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: var(--orange);
+}
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Danger zone */
+.danger-zone {
+  border-color: rgba(239, 68, 68, 0.4);
+  margin-top: 20px;
+}
+.danger-title {
+  color: var(--red);
+}
+.danger-text {
+  color: var(--text-gray);
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+.danger-actions {
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 1000px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    top: 70px;
+    left: -240px;
+    height: calc(100vh - 70px);
+    z-index: 100;
+    transition: left 0.25s;
+  }
+  .sidebar.open {
+    left: 0;
+  }
+  .sidebar.collapsed {
+    width: 240px;
+  }
+  .app-shell {
+    display: block;
+  }
+  .page {
+    padding: 20px;
+  }
+}
+
+/* Overlay for mobile sidebar (also referenced/toggled by organizerNavbar.js) */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 5, 7, 0.6);
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s, visibility 0.25s;
+}
+.sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== NEW STYLES FOR PARTICIPANTS VIEW & SLIDE DRAWER ===== */
+.table-wrap {
+  max-height: 450px; /* Adjust this height to control how many rows fit before scrolling */
+  overflow-y: auto;  /* Enables the vertical scrollbar */
+  position: relative;
+}
+
+/* Keeps the header sticky at the top while scrolling through teams */
+.table-wrap thead th {
+  position: sticky;
+  top: 0;
+  background-color: #18110e; /* Match your card/table background color so rows don't bleed through */
+  z-index: 10;
+}
+.hide-top-section #collapsible-top-section {
+  display: none;
+}
+.hide-top-section #top-header-actions {
+  display: none;
+}
+
+.participants-full-container {
+  width: 100%;
+}
+.full-width-panel {
+  width: 100%;
+}
+
+.clickable-team {
+  color: var(--orange);
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.clickable-team:hover {
+  color: var(--orange-light);
+  text-decoration: underline;
+}
+
+/* Slide-out Drawer Overlay & Panel */
+.team-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 5, 7, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.team-drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.team-slide-drawer {
+  position: fixed;
+  top: 0;
+  right: -480px;
+  width: 480px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #131316;
+  border-left: 1px solid var(--panel-border);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.6);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.team-slide-drawer.active {
+  right: 0;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--panel-border);
+  background: #16161a;
+}
+.drawer-header h3 {
+  font-family: "Oswald", sans-serif;
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-white);
+}
+.drawer-close-btn {
+  background: #232327;
+  border: none;
+  color: var(--text-gray);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.drawer-close-btn:hover {
+  background: var(--panel-border);
+  color: var(--text-white);
+}
+
+.drawer-body {
+  padding: 28px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.drawer-section h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-gray);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.drawer-squad-list {
+  list-style: none;
+  background: #18181c;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.drawer-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--panel-border);
+}
+.drawer-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Payment Verification Box */
+.payment-verify-box {
+  background: #18181c;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.payment-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.payment-label {
+  font-size: 11px;
+  color: var(--text-gray);
+  text-transform: uppercase;
+}
+.payment-ref {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--orange);
+}
+.btn-view-receipt {
+  background: rgba(255, 149, 0, 0.15);
+  color: var(--orange);
+  border: 1px solid var(--orange);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-view-receipt:hover {
+  background: var(--orange);
+  color: #1a1200;
+  box-shadow: 0 0 12px rgba(255, 149, 0, 0.4);
+}
+
+/* ===== PROFESSIONAL ID PREVIEW MODAL ===== */
+.doc-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 5, 7, 0.8);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.doc-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.doc-modal-box {
+  background: #151519;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  width: 500px;
+  max-width: 92vw;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.doc-modal-overlay.active .doc-modal-box {
+  transform: scale(1);
+}
+
+.doc-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--panel-border);
+  background: #1a1a1e;
+}
+.doc-modal-header h3 {
+  font-family: "Oswald", sans-serif;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-white);
+}
+
+.doc-modal-body {
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0b0b0d;
+}
+
+.doc-preview-img {
+  width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--panel-border);
+  background: #131316;
+}
+
+/* Squad Member Row with Individual ID Button */
+.squad-member-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #131316;
+  border: 1px solid #232327;
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+.squad-member-row:hover {
+  border-color: #333339;
+}
+.player-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-white);
+}
+.btn-view-id {
+  background: rgba(124, 58, 237, 0.15);
+  color: var(--violet-light);
+  border: 1px solid var(--violet);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-view-id:hover {
+  background: var(--violet);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+}
+.custom-logo {
+  height: 40px !important;
+  width: auto !important;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-right: 12px;
+}
+
+/* =========================================================================
+   NEW — ChampionCall brand logo, injected via JS (see manageTournament.js)
+   directly to the LEFT of the navbar's toggle button. This does NOT touch
+   organizerNavbar.html / organizerNavbar.css, so the shared fragment used
+   by the dashboard and other pages is completely unaffected.
+   ========================================================================= */
+.cc-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 16px;
+  padding-right: 16px;
+  border-right: 1px solid var(--panel-border);
+  white-space: nowrap;
+  user-select: none;
+}
+.cc-nav-logo i {
+  font-size: 18px;
+  color: var(--orange);
+}
+.cc-nav-logo-text {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-white);
+}
+.cc-nav-logo-accent {
+  color: var(--orange);
+}
+
+.cc-nav-logo-hidden {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .cc-nav-logo-text {
+    display: none;
+  }
+  .cc-nav-logo {
+    margin-right: 10px;
+    padding-right: 10px;
+  }
+}
+/* Filter Dropdown Container */
+.filter-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Custom Dropdown Menu Styling */
+.dropdown-menu-custom {
+  display: none;
+  position: absolute;
+  right: 0;
+  margin-top: 6px;
+  background: #1a1a1a;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 6px 0;
+  z-index: 100;
+  min-width: 155px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* 🔥 SHOW MENU WHEN ACTIVE CLASS IS ADDED BY JS 🔥 */
+.dropdown-menu-custom.active {
+  display: block;
+}
+
+/* Individual Filter Options */
+.dropdown-menu-custom .filter-option {
+  display: block;
+  padding: 9px 16px;
+  color: #cccccc;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-menu-custom .filter-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+/* Specific Option Color Cues */
+.dropdown-menu-custom .filter-option[data-status="PENDING"] {
+  color: #f39c12;
+}
+
+.dropdown-menu-custom .filter-option[data-status="APPROVED"] {
+  color: #2ecc71;
+}
+
+.dropdown-menu-custom .filter-option[data-status="REJECTED"] {
+  color: #e74c3c;
+}
+
+/* --- Responsive Styles for Mobile Devices --- */
+@media screen and (max-width: 768px) {
+  .filter-dropdown-container {
+    position: static;
+  }
+
+  .dropdown-menu-custom {
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: unset;
+    margin-top: 8px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  .dropdown-menu-custom.active {
+    display: block;
+  }
+
+  .dropdown-menu-custom .filter-option {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+/* ==========================================
+   Player Profile Preview Modal Styles (Responsive)
+   ========================================== */
+
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeInModal 0.2s ease-in-out;
+}
+
+.custom-modal-box {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 440px;
+  padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.custom-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #27272a;
+  padding-bottom: 12px;
+}
+
+.custom-modal-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff914d;
+  margin: 0;
+}
+
+.custom-modal-close {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 4px;
+}
+
+.custom-modal-close:hover {
+  color: #ffffff;
+}
+
+.player-modal-body {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.player-modal-body img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+  border: 2px solid #ff6b00;
+}
+
+.player-modal-body h4 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 18px;
+  word-break: break-word;
+}
+
+.player-modal-body p {
+  color: #a1a1aa;
+  font-size: 13px;
+  margin-top: 4px;
+  word-break: break-all;
+}
+
+.player-modal-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+  text-align: left;
+  background: #09090b;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #27272a;
+}
+
+.player-modal-info-grid strong {
+  color: #a1a1aa;
+  font-size: 11px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.player-modal-info-grid div div {
+  color: #ffffff;
+  font-size: 13px;
+  word-break: break-word;
+}
+
+.custom-modal-actions {
+  margin-top: 20px;
+}
+
+.btn-custom-cancel {
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s ease;
+}
+
+.btn-custom-cancel:hover {
+  background: #3f3f46;
+}
+
+@media (max-width: 480px) {
+  .custom-modal-box {
+    padding: 16px;
+    max-width: 100%;
+  }
+
+  .player-modal-info-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .custom-modal-header h3 {
+    font-size: 15px;
+  }
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================================================================
+   NEW — Fixtures tab: "Ready to Schedule" pre-generation state
+   (approved-teams grid + Tournament Info sidebar widget). Everything
+   above this point is unchanged from the original file.
+   ========================================================================= */
+.approved-teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.approved-team-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #18181c;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.approved-team-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.approved-team-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.approved-team-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+  white-space: nowrap; /* Keeps text strictly on one line */
+  overflow: hidden; /* Hides overflow safely */
+  text-overflow: ellipsis; /* Adds ... if too long */
+}
+
+.approved-team-captain {
+  color: var(--text-gray);
+  font-size: 12px;
+  white-space: nowrap; /* Keeps text strictly on one line */
+  overflow: hidden; /* Hides overflow safely */
+  text-overflow: ellipsis; /* Adds ... if too long */
+}
+
+.no-approved-teams-msg {
+  grid-column: 1 / -1;
+  color: var(--text-gray);
+  font-size: 14px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* showMatches  */
+
+/* ===== HEADER ===== */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.page-header-left {
+  min-width: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 10px;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 3px var(--orange-dim);
+}
+
+.page-header h1 {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+  color: var(--text-hi);
+}
+
+.page-header p {
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  margin: 0;
+}
+
+.btn-edit {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--violet);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.btn-edit:hover {
+  background: var(--violet-dim);
+  border-color: rgba(139, 92, 246, 0.6);
+  transform: translateY(-1px);
+}
+
+/* ===== ROUND RAIL LAYOUT (signature element) =====
+           A vertical connector line runs down the left, echoing a
+           tournament bracket's progression from round to round. Each
+           round gets a numbered node on the rail; matches sit to its right. */
+.rounds-rail {
+  position: relative;
+  padding-left: 34px;
+}
+
+.rounds-rail::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--orange) 0%,
+    var(--border) 15%,
+    var(--border) 85%,
+    var(--violet) 100%
+  );
+  opacity: 0.5;
+}
+
+.round-block {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.round-block:last-child {
+  margin-bottom: 0;
+}
+
+.round-node {
+  position: absolute;
+  left: -34px;
+  top: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.round-node::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+.round-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.round-header h2 {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-hi);
+  margin: 0;
+}
+
+.round-count {
+  font-size: 0.75rem;
+  color: var(--text-lo);
+  font-weight: 500;
+}
+
+/* ===== MATCH CARD ===== */
+.match-fixture-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 12px;
+  transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.match-fixture-card:hover {
+  border-color: rgba(255, 145, 77, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+}
+
+.match-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 108px;
+}
+
+.match-number {
+  font-family: "Oswald", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-lo);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.match-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-mid);
+}
+
+.match-time i {
+  font-size: 0.7rem;
+  color: var(--text-lo);
+}
+
+.match-teams-center {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+
+.team-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 190px;
+  min-width: 0;
+}
+
+.team-display.home {
+  justify-content: flex-end;
+  text-align: right;
+}
+.team-display.away {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.team-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.team-name {
+  font-family: "Inter", sans-serif;
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--text-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.team-display.away .team-name:not(.tbd) {
+  color: var(--text-hi);
+}
+.team-name.tbd {
+  color: var(--text-lo);
+  font-weight: 500;
+  font-style: italic;
+}
+
+.vs-badge {
+  flex-shrink: 0;
+  font-family: "Oswald", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--orange);
+  background: var(--orange-dim);
+  border: 1px solid rgba(255, 145, 77, 0.25);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.match-status-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.status-badge {
+  font-family: "Inter", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.status-scheduled {
+  background: var(--blue-dim);
+  color: var(--blue);
+  border: 1px solid rgba(96, 165, 250, 0.25);
+}
+
+.status-live {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-live::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f87171;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.75);
+  }
+}
+
+.status-completed {
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.btn-action-sm {
+  background: var(--panel-2);
+  color: var(--text-hi);
+  border: 1px solid var(--border);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-action-sm:hover {
+  background: #202026;
+  border-color: rgba(255, 145, 77, 0.3);
+  color: var(--orange);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  body {
+    padding: 28px 14px 60px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rounds-rail {
+    padding-left: 26px;
+  }
+  .round-node {
+    left: -26px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .match-fixture-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .match-info-left {
+    flex-direction: row;
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  .match-teams-center {
+    gap: 10px;
+  }
+  .team-display {
+    width: auto;
+    flex: 1;
+  }
+  .team-name {
+    font-size: 0.86rem;
+  }
+
+  .match-status-right {
+    justify-content: space-between;
+  }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .match-fixture-card,
+  .btn-edit,
+  .btn-action-sm {
+    transition: none;
+  }
+  .status-live::before {
+    animation: none;
+  }
+}
+
+/* Keyboard focus visibility */
+.btn-edit:focus-visible,
+.btn-action-sm:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+/* manual creation */
+.builder-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  max-width: 1250px;
+  margin: 0 auto;
+}
+
+.builder-main {
+  background: #18181c;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 0; /* FIX: without this, a grid item won't shrink below the
+                   intrinsic (unwrapped) width of its flex-row children,
+                   which was pushing the whole panel — and the Save button
+                   in the footer below it — off the right edge of the page. */
+  overflow-x: hidden; /* safety net so nothing inside can force a scrollbar */
+}
+
+.builder-sidebar {
+  background: #18181c;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 20px;
+  height: fit-content;
+}
+
+.builder-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: #fff;
+}
+
+.builder-subtitle {
+  font-size: 0.85rem;
+  color: #a1a1aa;
+  margin: 0 0 20px 0;
+}
+
+/* Drag-and-Drop Team Chips */
+.approved-team-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #121214;
+  border: 1px solid #27272a;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: grab;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.approved-team-chip:active {
+  cursor: grabbing;
+}
+
+.approved-team-chip:hover {
+  border-color: var(--orange);
+  background: #1a1a1e;
+}
+
+.team-chip-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.team-chip-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.empty-pool-msg {
+  color: #71717a;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 15px 0;
+  font-style: italic;
+}
+
+/* Match Drop Zones */
+.match-slot-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #121214;
+  border: 1px solid #27272a;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap; /* FIX: let the row's controls (badge, round select, two
+                      drop zones, "vs", datetime picker, Undo, delete) wrap
+                      onto a second line instead of forcing the row — and
+                      the whole builder panel — wider than the viewport. */
+  row-gap: 10px;
+}
+
+.match-number-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--orange);
+  background: rgba(255, 145, 77, 0.1);
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.drop-zone {
+  flex: 1 1 150px; /* was flex:1 with min-width:0, which let the zone
+                       collapse to almost nothing; give it a sane basis
+                       so it wraps as a whole unit instead of squeezing
+                       text down to unreadable widths */
+  min-height: 42px;
+  min-width: 130px;
+  background: #18181c;
+  border: 2px dashed #27272a;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #71717a;
+  font-size: 0.85rem;
+  padding: 8px 10px;
+  transition: all 0.2s;
+}
+
+.drop-zone.drag-over {
+  border-color: var(--orange);
+  background: rgba(255, 145, 77, 0.05);
+  color: #fff;
+}
+
+.drop-zone.filled {
+  border-style: solid;
+  border-color: #3f3f46;
+  color: #fff;
+  justify-content: space-between;
+}
+
+/* Inner content injected by dropTeam() in manageTournament.js:
+   a flex row (logo + team name) followed by the remove (×) button.
+   Constrained so long team names truncate with an ellipsis instead
+   of wrapping onto multiple lines and blowing out the row height. */
+.drop-zone-filled-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+.drop-zone-team-name {
+  font-weight: 600;
+  color: #ff914d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.drop-zone-remove-btn {
+  background: none;
+  border: none;
+  color: #a1a1aa;
+  cursor: pointer;
+  font-size: 16px;
+  flex-shrink: 0;
+  padding: 0 0 0 8px;
+}
+.drop-zone-remove-btn:hover {
+  color: #ef4444;
+}
+
+.vs-text {
+  font-weight: 700;
+  color: #71717a;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.builder-select,
+.builder-input {
+  background: #18181c;
+  border: 1px solid #27272a;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  flex-shrink: 0; /* FIX: keep the round-number select and the datetime
+                     input at their natural size instead of letting the
+                     browser's intrinsic control width force overflow */
+}
+
+.builder-select:focus,
+.builder-input:focus {
+  border-color: var(--orange);
+  outline: none;
+}
+
+/* The datetime-local control specifically — Chrome renders it with a
+   fairly wide intrinsic size, so pin a max-width and stop it shrinking
+   the row's other flex children unpredictably. */
+.match-slot-row input[type="datetime-local"] {
+  max-width: 190px;
+  flex-shrink: 0;
+}
+
+/* Customizing datetime-local input calendar icon and text colors for dark theme */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.7;
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.btn-icon-action {
+  background: #27272a;
+  border: none;
+  color: #a1a1aa;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0; /* FIX: keep "Undo" pinned to its own size on wrap */
+}
+
+.btn-icon-action:hover:not(:disabled) {
+  background: #3f3f46;
+  color: #fff;
+}
+
+.btn-icon-action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-icon-delete {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.btn-icon-delete:hover {
+  color: #f87171;
+}
+
+.builder-actions-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 15px;
+  border-top: 1px solid #27272a;
+  flex-wrap: wrap; /* FIX: on narrow widths, let Cancel / Save wrap instead
+                      of clipping */
+  gap: 12px;
+}
+
+.right-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  background: #27272a;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background: #3f3f46;
+}
+
+.btn-primary-orange {
+  background: var(--orange);
+  color: #000;
+  font-weight: 600;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap; /* keep the label on one line so the button never
+                           gets visually clipped/truncated */
+}
+
+.btn-primary-orange:hover {
+  opacity: 0.9;
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  cursor: pointer;
+}
+
+.btn-text:hover {
+  color: #fff;
+}
+
+/* =========================================================================
+   NEW — MANUAL FIXTURE BUILDER: full-width mode
+   Applied to #fixturesTwoCol (the .two-col wrapper for the Fixtures tab)
+   via the "manual-builder-mode" class, toggled in manageTournament.js
+   (showManualBuilder / hideManualBuilder). While the builder is open,
+   the side column (Tournament Info / Top Players) is hidden and the
+   builder panel takes the full width — this is the fix for "Manual
+   Creation should take a full screen, Tournament Info should be gone".
+   ========================================================================= */
+#fixturesTwoCol.manual-builder-mode {
+  display: block;
+}
+
+#fixturesTwoCol.manual-builder-mode .col-side {
+  display: none;
+}
+
+#fixturesTwoCol.manual-builder-mode .col-main {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Responsive tightening for the builder itself on narrower viewports */
+@media (max-width: 900px) {
+  .builder-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .match-slot-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .drop-zone {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .match-slot-row input[type="datetime-local"] {
+    max-width: 100%;
+    width: 100%;
+  }
+  .builder-select,
+  .builder-input {
+    width: 100%;
+  }
+}
+
+/* scroll bar of Fixture */
+#fixtures-list {
+  max-height: calc(
+    100vh - 280px
+  ); /* Dynamically scales based on your screen height so it never overflows off-screen */
+  overflow-y: auto; /* Turns on the independent scrollbar */
+  padding-right: 12px; /* Adds breathing room so cards don't touch the scrollbar */
+}
+
+/* Custom sleek dark scrollbar to match your theme */
+#fixtures-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#fixtures-list::-webkit-scrollbar-track {
+  background: #18181c;
+  border-radius: 4px;
+}
+
+#fixtures-list::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+#fixtures-list::-webkit-scrollbar-thumb:hover {
+  background: #ff914d;
+}
+
+/* =============================================================================
+   ============================  SCHEDULE TAB (NEW)  ==========================
+   =============================================================================
+   Everything above this line is 100% unchanged from the original file.
+
+   The rules below style #tab-schedule (added in manageTournament.html) plus
+   the reschedule modal (#modal) and toast (#toast), which were sourced from
+   your scheduleMatch.css. That file was written for a standalone page with
+   its own generic class names — .btn, .page-header, .stats, .stat-value,
+   .form-grid, .team-name, .team-logo, .match-number, etc. — several of
+   which are ALREADY used elsewhere in this stylesheet for different
+   purposes (Fixtures tab, Settings form, buttons app-wide).
+
+   To avoid silently changing those other tabs, every selector below is
+   scoped under "#tab-schedule " (an ID selector, so it always wins over the
+   generic unscoped rules above regardless of file order) or under the
+   modal/toast's own unique wrappers. Nothing here touches an unscoped
+   .btn, .page-header, .form-grid, .team-name, etc. — those keep behaving
+   exactly as they did before for every other tab.
+
+   FONT-SIZE PASS: the values below were bumped from scheduleMatch.css's
+   original (much smaller) numbers so the Schedule tab's typography scale
+   matches the Fixtures section (.page-header h1, .eyebrow, .team-name,
+   .match-number, .status-badge, .btn, .stat-value, etc. above). Only
+   font-size (and a couple of tightly-coupled dimensions like icon/button
+   box size that would otherwise clip the larger text) were touched —
+   colors, spacing, and layout are unchanged.
+   ============================================================================= */
+
+/* --- a few CSS variables scheduleMatch.css needed that weren't defined above --- */
+:root {
+  --muted: #8d8d95;
+  --muted-2: #686870;
+  --orange-dark: #3a240c;
+}
+
+/* ===== HEADER / STATS (scoped) ===== */
+#tab-schedule .page-header {
+  align-items: flex-start;
+}
+
+#tab-schedule .eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  margin-bottom: 7px;
+}
+#tab-schedule .eyebrow::before {
+  content: none;
+}
+
+#tab-schedule .page-header h1 {
+  font-size: 2rem;
+  letter-spacing: 0.3px;
+  font-weight: 700;
+  font-family: "Oswald", sans-serif;
+}
+
+#tab-schedule .subtitle {
+  color: var(--text-mid);
+  font-size: 0.9rem;
+  margin-top: 7px;
+}
+
+#tab-schedule .header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+#tab-schedule .btn {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: #171719;
+  color: #ddd;
+  font-size: 14px;
+  font-weight: 700;
+  transition: 0.2s;
+}
+#tab-schedule .btn:hover {
+  background: #202023;
+  opacity: 1;
+}
+#tab-schedule .btn.primary {
+  border-color: #a7640e;
+  background: var(--orange);
+  color: #111;
+}
+#tab-schedule .btn.primary:hover {
+  background: var(--orange-light);
+}
+
+#tab-schedule .stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+#tab-schedule .stat {
+  background: var(--panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 9px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+#tab-schedule .stat::after {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: -25px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(255, 157, 22, 0.035);
+}
+
+#tab-schedule .stat-label {
+  color: var(--text-mid);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 0;
+}
+
+#tab-schedule .stat-value {
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: 7px;
+  font-family: "Oswald", sans-serif;
+}
+#tab-schedule .stat-value.orange {
+  color: var(--orange);
+}
+#tab-schedule .stat-value.green {
+  color: var(--green);
+}
+#tab-schedule .stat-value.red {
+  color: var(--red);
+}
+
+#tab-schedule .stat-meta {
+  color: var(--muted-2);
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* ===== SCHEDULE SHELL / TOOLBAR ===== */
+#tab-schedule .schedule-shell {
+  background: var(--panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+#tab-schedule .toolbar {
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+#tab-schedule .date-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#tab-schedule .date-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #171719;
+  color: #aaa;
+  cursor: pointer;
+}
+#tab-schedule .date-btn:hover {
+  color: #fff;
+  border-color: #444;
+}
+
+#tab-schedule .date-display {
+  min-width: 160px;
+  text-align: center;
+}
+#tab-schedule .date-day {
+  font-size: 15px;
+  font-weight: 800;
+}
+#tab-schedule .date-number {
+  font-size: 13px;
+  color: var(--text-mid);
+  margin-top: 2px;
+}
+
+#tab-schedule .filters {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+#tab-schedule .filter {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #151517;
+  color: #999;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+#tab-schedule .filter.active {
+  background: #30200d;
+  color: var(--orange);
+  border-color: #5c3a13;
+}
+
+#tab-schedule .select {
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #151517;
+  color: #aaa;
+  padding: 0 9px;
+  font-size: 13px;
+  outline: none;
+}
+
+/* ===== TIMELINE ===== */
+#tab-schedule .timeline {
+  padding: 20px 18px 28px;
+}
+
+#tab-schedule .timeline-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px 15px;
+}
+#tab-schedule .timeline-header strong {
+  font-size: 14px;
+}
+#tab-schedule .timeline-header span {
+  color: var(--text-mid);
+  font-size: 12px;
+}
+
+#tab-schedule .schedule-row {
+  display: grid;
+  grid-template-columns: 75px 1fr;
+  min-height: 115px;
+}
+
+#tab-schedule .time {
+  position: relative;
+  color: #888;
+  font-size: 12px;
+  font-weight: 700;
+  padding-top: 8px;
+  text-align: right;
+  padding-right: 16px;
+}
+#tab-schedule .time::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 13px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #343438;
+  border: 2px solid var(--panel);
+  z-index: 2;
+}
+#tab-schedule .time.current {
+  color: var(--orange);
+}
+#tab-schedule .time.current::after {
+  background: var(--orange);
+  box-shadow: 0 0 0 4px rgba(255, 157, 22, 0.08);
+}
+
+#tab-schedule .event-column {
+  border-left: 1px solid #29292d;
+  padding: 0 0 15px 19px;
+}
+
+#tab-schedule .match-card {
+  background: var(--panel-2);
+  border: 1px solid #27272b;
+  border-radius: 9px;
+  padding: 13px 14px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  transition: 0.2s;
+  position: relative;
+}
+#tab-schedule .match-card:hover {
+  border-color: #46464b;
+  transform: translateY(-1px);
+}
+#tab-schedule .match-card.live {
+  border-color: #714817;
+  box-shadow: inset 3px 0 0 var(--orange);
+}
+#tab-schedule .match-card.conflict {
+  border-color: #653033;
+  box-shadow: inset 3px 0 0 var(--red);
+}
+
+#tab-schedule .match-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#tab-schedule .match-number {
+  color: #74747b;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: none;
+}
+
+#tab-schedule .round-tag {
+  background: #242428;
+  color: #999;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+#tab-schedule .status {
+  margin-left: auto;
+  border-radius: 20px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+#tab-schedule .status.scheduled {
+  background: var(--blue-bg);
+  color: var(--blue);
+}
+#tab-schedule .status.live {
+  background: var(--orange-dark);
+  color: var(--orange);
+}
+#tab-schedule .status.completed {
+  background: var(--green-bg);
+  color: var(--green);
+}
+#tab-schedule .status.conflict {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+#tab-schedule .teams {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+#tab-schedule .team {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+#tab-schedule .team-logo {
+  width: 29px;
+  height: 29px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  background: #252529;
+  border: 1px solid #333338;
+  font-size: 16px;
+  flex-shrink: 0;
+  object-fit: unset;
+}
+
+#tab-schedule .team-name {
+  font-size: 0.94rem;
+  font-weight: 750;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Inter", sans-serif;
+  color: var(--text-hi);
+}
+
+#tab-schedule .vs {
+  color: #66666d;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+#tab-schedule .match-info {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  color: #77777f;
+  font-size: 13px;
+}
+#tab-schedule .match-info span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#tab-schedule .match-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#tab-schedule .icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #19191c;
+  color: #888;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+#tab-schedule .icon-btn:hover {
+  color: #fff;
+  border-color: #45454a;
+}
+
+#tab-schedule .conflict-message {
+  margin-top: 9px;
+  color: var(--red);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ===== SCHEDULE FOOTER / LEGEND ===== */
+#tab-schedule .schedule-footer {
+  border-top: 1px solid var(--border-soft);
+  padding: 13px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-mid);
+  font-size: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#tab-schedule .legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+#tab-schedule .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+#tab-schedule .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+#tab-schedule .dot.blue {
+  background: var(--blue);
+}
+#tab-schedule .dot.orange {
+  background: var(--orange);
+}
+#tab-schedule .dot.green {
+  background: var(--green);
+}
+#tab-schedule .dot.red {
+  background: var(--red);
+}
+
+/* ===== SCHEDULE RESPONSIVE ===== */
+@media (max-width: 900px) {
+  #tab-schedule .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  #tab-schedule .page-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  #tab-schedule .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  #tab-schedule .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #tab-schedule .filters {
+    overflow-x: auto;
+  }
+  #tab-schedule .match-card {
+    grid-template-columns: 1fr;
+  }
+  #tab-schedule .match-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* =============================================================================
+   RESCHEDULE MODAL (#modal) + TOAST (#toast)
+   These sit outside #tab-schedule in the DOM (siblings near the end of
+   <body>, alongside the other modals), so they're scoped by their own
+   unique wrapper selectors instead. Note: ".form-grid" inside the modal is
+   deliberately written as "#modal .form-grid" so it can't collide with the
+   unrelated 2-column .form-grid used by the Settings tab.
+   ============================================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(5px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100;
+}
+.modal-overlay.show {
+  display: flex;
+}
+
+#modal .modal {
+  width: 430px;
+  max-width: 92vw;
+  background: #151517;
+  border: 1px solid #343438;
+  border-radius: 11px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+}
+
+#modal .modal-header {
+  padding: 17px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#modal .modal-title {
+  font-size: 18px;
+  font-weight: 850;
+  font-family: "Oswald", sans-serif;
+}
+#modal .modal-close {
+  border: none;
+  background: none;
+  color: #777;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#modal .modal-body {
+  padding: 18px;
+}
+
+#modal .modal-match {
+  background: #101012;
+  border: 1px solid #252529;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 17px;
+}
+#modal .modal-match-label {
+  color: var(--text-mid);
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+#modal .modal-match-teams {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+#modal .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 0;
+}
+#modal .field.full {
+  grid-column: 1 / -1;
+}
+#modal .field label {
+  display: block;
+  color: #999;
+  font-size: 12px;
+  margin-bottom: 6px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+#modal .field input,
+#modal .field select {
+  width: 100%;
+  height: 37px;
+  border: 1px solid #2d2d31;
+  background: #0f0f11;
+  border-radius: 6px;
+  color: #eee;
+  padding: 0 10px;
+  outline: none;
+  font-size: 14px;
+}
+#modal .field input:focus,
+#modal .field select:focus {
+  border-color: #7c501c;
+}
+
+#modal .modal-footer {
+  padding: 13px 18px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 650px) {
+  #modal .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+#toast {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  background: #19191c;
+  border: 1px solid #36363a;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: 0.3s;
+  z-index: 2200;
+}
+#toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+#toast .toast-icon {
+  color: var(--green);
+}
+
+/* scroll bar inside the schedule 
+ */
+
+/* Container holding the schedule timeline list */
+.timeline {
+  max-height: calc(
+    100vh - 300px
+  ); /* Dynamically sizes based on screen height */
+  overflow-y: auto; /* Enables the vertical scrollbar */
+  padding-right: 10px; /* Gives breathing room so cards don't touch the bar */
+}
+
+/* Custom sleek dark scrollbar matching your theme */
+.timeline::-webkit-scrollbar {
+  width: 6px;
+}
+
+.timeline::-webkit-scrollbar-track {
+  background: #18181c;
+  border-radius: 4px;
+}
+
+.timeline::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+}
+
+.timeline::-webkit-scrollbar-thumb:hover {
+  background: #ff914d;
+}
+
+/* EDIT MATCH MODAL STYLES */
+/* PROFESSIONAL EDIT MATCH MODAL */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-content {
+    background: #141417;
+    border: 1px solid #27272a;
+    padding: 30px;
+    border-radius: 16px;
+    width: 440px;
+    color: #fff;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-content h3 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    border-bottom: 1px solid #27272a;
+    padding-bottom: 12px;
+}
+
+.modal-group {
+    margin-bottom: 18px;
+}
+
+.modal-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #a1a1aa;
+    display: block;
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+}
+
+.modal-input {
+    width: 100%;
+    background: #1c1c21;
+    border: 1px solid #27272a;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.modal-input:focus {
+    border-color: #ff914d;
+    background: #212128;
+    box-shadow: 0 0 0 3px rgba(255, 145, 77, 0.15);
+}
+
+.modal-input[readonly] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #18181c;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    border-top: 1px solid #27272a;
+    padding-top: 18px;
+}
+
+.modal-btn-cancel {
+    background: transparent;
+    border: 1px solid #27272a;
+    color: #a1a1aa;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-btn-cancel:hover {
+    background: #27272a;
+    color: #fff;
+}
+
+.modal-btn-save {
+    background: #ff914d;
+    border: none;
+    color: #000;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-btn-save:hover {
+    background: #ffa86b;
+    box-shadow: 0 4px 12px rgba(255, 145, 77, 0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+
+/* Email send after publish Schedule  */
+/* MODAL OVERLAY BACKGROUND */
+.custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 12, 0.85);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* MODAL BOX CONTAINER */
+.custom-modal .modal-content {
+    background: #151518;
+    border: 1px solid #2a2a32;
+    padding: 30px;
+    border-radius: 14px;
+    width: 440px;
+    text-align: left;
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* MODAL TITLE */
+.custom-modal h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+/* MODAL DESCRIPTION TEXT */
+.custom-modal p {
+    color: #9ca3af;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+/* BUTTON WRAPPER */
+.custom-modal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* CANCEL BUTTON */
+.custom-modal .btn.secondary {
+    background: #22222a;
+    color: #d1d5db;
+    border: 1px solid #32323d;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-modal .btn.secondary:hover {
+    background: #2a2a35;
+    color: #ffffff;
+}
+
+/* PUBLISH (CONFIRM) BUTTON MATCHING YOUR THEME */
+.custom-modal .btn.primary {
+    background: #f59e0b; /* Amber/Yellow theme matching your Publish Schedule button */
+    color: #0f0f12;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-modal .btn.primary:hover {
+    background: #d97706;
+}
+
+/* status of Fixture */
+.status-completed-red {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+/* status for Schedule table */
+/* Target the lowercase status class automatically appended by Thymeleaf */
+.status.completed {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Optional: style for live or scheduled if needed */
+.status.live {
+    background-color: rgba(249, 115, 22, 0.15) !important;
+    color: #f97316 !important;
+    border: 1px solid rgba(249, 115, 22, 0.3) !important;
+}
+#editMatchModal {
+  display: none;
+}
+/* If your backend passes organizerProfile, hide this modal by default */
+body:has(#onboardingModal) #onboardingModal.profile-is-complete {
+    display: none !important;
+}

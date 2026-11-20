@@ -73,5 +73,5 @@ function setRole(role) {
 
   document.cookie = "Role=" + role + "; path=/";
 
-  window.location.href = "/signUp";
+  window.location.href = "/login";
 }

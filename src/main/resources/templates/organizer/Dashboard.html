@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChampionCall - Organizer Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" th:href="@{/css/organizer/dashboard.css}" />
+    <link rel="stylesheet" th:href="@{/css/fragments/organizerNavbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/fragments/organizerSidebar.css}" />
+  </head>
+  <body>
+    <div
+      class="mobile-overlay"
+      id="mobileOverlay"
+      onclick="toggleSidebar()"
+    ></div>
+
+    <div class="app-wrapper">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <i class="fa-solid fa-trophy brand-icon"></i>
+          <span class="brand-text">CHAMPION<span>CALL</span></span>
+        </div>
+        <div
+          th:replace="~{fragments/organizerSidebar :: organizerSidebar('dashboard',${organizerProfile})}"
+        ></div>
+      </aside>
+
+      <div class="main-content">
+        <div
+          th:replace="~{fragments/organizerNavbar :: organizerNavbar('dashboard',${organizerProfile})}"
+        ></div>
+
+        <main class="dashboard-viewport">
+          <section class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fa-solid fa-bolt"></i></div>
+              <div class="stat-data">
+                <h3>Active Tournaments</h3>
+                <div class="counter-value">04</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div class="stat-data">
+                <h3>Registered Teams</h3>
+                <div class="counter-value">48</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+              </div>
+              <div class="stat-data">
+                <h3>Total Revenue</h3>
+                <div class="counter-value">₹86,420</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+              <div class="stat-data">
+                <h3>Matches Completed</h3>
+                <div class="counter-value">124</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="glass-panel attention-panel">
+            <div class="section-header">
+              <h2>
+                <i class="fa-solid fa-triangle-exclamation"></i> Needs Your
+                Attention
+              </h2>
+            </div>
+            <div class="attention-grid">
+              <a href="#" class="attention-card">
+                <div class="attention-icon orange-bg">
+                  <i class="fa-solid fa-users-viewfinder"></i>
+                </div>
+                <div class="attention-text">
+                  <strong>12</strong>
+                  <span>Pending team registrations</span>
+                </div>
+                <i class="fa-solid fa-chevron-right attention-arrow"></i>
+              </a>
+
+              <a href="#" class="attention-card">
+                <div class="attention-icon blue-bg">
+                  <i class="fa-solid fa-tower-broadcast"></i>
+                </div>
+                <div class="attention-text">
+                  <strong>3</strong>
+                  <span>Matches need score updates</span>
+                </div>
+                <i class="fa-solid fa-chevron-right attention-arrow"></i>
+              </a>
+
+              <a href="#" class="attention-card">
+                <div class="attention-icon purple-bg">
+                  <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="attention-text">
+                  <strong>1</strong>
+                  <span>Tournament awaiting publish</span>
+                </div>
+                <i class="fa-solid fa-chevron-right attention-arrow"></i>
+              </a>
+
+              <a href="#" class="attention-card">
+                <div class="attention-icon green-bg">
+                  <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div class="attention-text">
+                  <strong>₹9,150</strong>
+                  <span>Pending payout — Request now</span>
+                </div>
+                <i class="fa-solid fa-chevron-right attention-arrow"></i>
+              </a>
+            </div>
+          </section>
+
+          <div class="dashboard-grid">
+            <div class="grid-col-left">
+              <section class="charts-row">
+                <div class="chart-card glass-panel">
+                  <h3>Sport Popularity</h3>
+                  <div class="chart-container">
+                    <canvas id="popularityChart"></canvas>
+                  </div>
+                </div>
+                <div class="chart-card glass-panel">
+                  <h3>Match Completion Rate</h3>
+                  <div class="chart-container">
+                    <canvas id="completionChart"></canvas>
+                  </div>
+                </div>
+              </section>
+
+              <section class="glass-panel content-section">
+                <div class="section-header">
+                  <h2>Upcoming Matches</h2>
+                  <a href="#" class="view-all-link">Full schedule</a>
+                </div>
+                <div class="matches-list">
+                  <div class="match-card">
+                    <div class="match-meta">
+                      <span class="sport-tag">Cricket</span>
+                      <span class="status-tag scheduled">Scheduled</span>
+                    </div>
+                    <div class="match-versus">
+                      <div class="team">
+                        <div class="team-initials">RR</div>
+                        <span class="team-name">Royal Rangers</span>
+                      </div>
+                      <span class="vs-divider">VS</span>
+                      <div class="team">
+                        <div class="team-initials">TK</div>
+                        <span class="team-name">Thunder Kings</span>
+                      </div>
+                    </div>
+                    <div class="match-details">
+                      <p>
+                        <i class="fa-solid fa-trophy"></i> Champions Premier
+                        League
+                      </p>
+                      <p>
+                        <i class="fa-regular fa-calendar"></i> Jun 22 • 4:00 PM
+                      </p>
+                      <p>
+                        <i class="fa-solid fa-location-dot"></i> Wankhede Arena
+                      </p>
+                    </div>
+                    <div class="match-actions">
+                      <button class="btn-secondary">Edit</button>
+                      <button class="btn-primary">Update Score</button>
+                      <button class="btn-secondary">View</button>
+                    </div>
+                  </div>
+
+                  <div class="match-card">
+                    <div class="match-meta">
+                      <span class="sport-tag">Football</span>
+                      <span class="status-tag scheduled">Scheduled</span>
+                    </div>
+                    <div class="match-versus">
+                      <div class="team">
+                        <div class="team-initials">FC</div>
+                        <span class="team-name">FC Strikers</span>
+                      </div>
+                      <span class="vs-divider">VS</span>
+                      <div class="team">
+                        <div class="team-initials">UN</div>
+                        <span class="team-name">United XI</span>
+                      </div>
+                    </div>
+                    <div class="match-details">
+                      <p><i class="fa-solid fa-trophy"></i> City Futsal Cup</p>
+                      <p>
+                        <i class="fa-regular fa-calendar"></i> Jun 23 • 6:30 PM
+                      </p>
+                      <p>
+                        <i class="fa-solid fa-location-dot"></i> Turf Central
+                      </p>
+                    </div>
+                    <div class="match-actions">
+                      <button class="btn-secondary">Edit</button>
+                      <button class="btn-primary">Update Score</button>
+                      <button class="btn-secondary">View</button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="glass-panel content-section">
+                <div class="section-header">
+                  <h2>Recent Registrations</h2>
+                  <a href="#" class="view-all-link">View all</a>
+                </div>
+                <div class="table-responsive">
+                  <table class="dashboard-table">
+                    <thead>
+                      <tr>
+                        <th>Team Name</th>
+                        <th>Captain</th>
+                        <th>Tournament</th>
+                        <th>Date</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th style="text-align: right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="table-team-cell">
+                            <strong>Sharks</strong>
+                          </div>
+                        </td>
+                        <td>Aryan Bose</td>
+                        <td>Metro Basketball Clash</td>
+                        <td class="whitespace-nowrap">Jun 20, 2026</td>
+                        <td>
+                          <span class="payment-badge pending">Pending</span>
+                        </td>
+                        <td>
+                          <span class="status-badge pending">Pending</span>
+                        </td>
+                        <td>
+                          <div class="table-actions">
+                            <button class="action-btn" title="View">
+                              <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button class="action-btn accept" title="Approve">
+                              <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button class="action-btn reject" title="Reject">
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="table-team-cell">
+                            <strong>Hawks</strong>
+                          </div>
+                        </td>
+                        <td>Dev Menon</td>
+                        <td>Smash Open</td>
+                        <td class="whitespace-nowrap">Jun 19, 2026</td>
+                        <td><span class="payment-badge paid">Paid</span></td>
+                        <td>
+                          <span class="status-badge approved">Approved</span>
+                        </td>
+                        <td>
+                          <div class="table-actions">
+                            <button class="action-btn" title="View">
+                              <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button class="action-btn accept" title="Approve">
+                              <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button class="action-btn reject" title="Reject">
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+
+            <div class="grid-col-right">
+              <section class="glass-panel sidebar-widget">
+                <h3>Revenue Overview</h3>
+                <div class="revenue-summary-metrics">
+                  <div class="metric-box">
+                    <span class="metric-label">Total Earnings</span>
+                    <span class="metric-value">₹86,420</span>
+                  </div>
+                  <div class="metric-box">
+                    <span class="metric-label">Pending Payouts</span>
+                    <span class="metric-value orange-txt">₹9,150</span>
+                  </div>
+                </div>
+                <div class="bar-chart-mock">
+                  <div class="bar-chart-gridline"></div>
+                  <div class="bar-chart-gridline" style="bottom: 50%"></div>
+                  <div class="bar-chart-wrapper">
+                    <div class="chart-bar" style="height: 40%">
+                      <span>M</span>
+                    </div>
+                    <div class="chart-bar" style="height: 65%">
+                      <span>T</span>
+                    </div>
+                    <div class="chart-bar" style="height: 35%">
+                      <span>W</span>
+                    </div>
+                    <div class="chart-bar" style="height: 80%">
+                      <span>T</span>
+                    </div>
+                    <div class="chart-bar" style="height: 55%">
+                      <span>F</span>
+                    </div>
+                    <div class="chart-bar" style="height: 95%">
+                      <span>S</span>
+                    </div>
+                    <div class="chart-bar" style="height: 50%">
+                      <span>S</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="escrow-footer">
+                  <span>Razorpay Settlements</span>
+                  <strong>₹72,190</strong>
+                </div>
+              </section>
+
+              <section class="glass-panel sidebar-widget">
+                <h3>Activity Timeline</h3>
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-marker blue-mark"></div>
+                    <div class="timeline-info">
+                      <p><strong>Tournament Created</strong></p>
+                      <p class="timeline-desc">
+                        Champions Premier League went live for registration.
+                      </p>
+                      <span class="timeline-time">2 min ago</span>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-marker green-mark"></div>
+                    <div class="timeline-info">
+                      <p><strong>Team Approved</strong></p>
+                      <p class="timeline-desc">
+                        Royal Rangers approved for Cricket league.
+                      </p>
+                      <span class="timeline-time">18 min ago</span>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-marker orange-mark"></div>
+                    <div class="timeline-info">
+                      <p><strong>Match Scheduled</strong></p>
+                      <p class="timeline-desc">
+                        FC Strikers vs United XI set for Jun 23.
+                      </p>
+                      <span class="timeline-time">1 hr ago</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="glass-panel sidebar-widget">
+                <h3>Recent Notifications</h3>
+                <div class="notifications-stack">
+                  <div class="notif-alert">
+                    <div class="notif-icon">
+                      <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <div class="notif-body">
+                      <p><strong>12 new registrations</strong></p>
+                      <p>Smash Open Badminton</p>
+                      <span class="notif-time">Just now</span>
+                    </div>
+                  </div>
+                  <div class="notif-alert">
+                    <div class="notif-icon">
+                      <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <div class="notif-body">
+                      <p><strong>Payment confirmed</strong></p>
+                      <p>₹4,280 received from FC Strikers</p>
+                      <span class="notif-time">12 min ago</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <section class="glass-panel content-section">
+            <div class="section-header">
+              <h2>Quick Actions</h2>
+            </div>
+            <div class="quick-actions-grid">
+              <button class="action-tile">
+                <div class="tile-icon"><i class="fa-solid fa-plus"></i></div>
+                <span>Create Tournament</span>
+              </button>
+              <button class="action-tile">
+                <div class="tile-icon">
+                  <i class="fa-solid fa-diagram-project"></i>
+                </div>
+                <span>Generate Fixtures</span>
+              </button>
+              <button class="action-tile">
+                <div class="tile-icon">
+                  <i class="fa-solid fa-unlock-keyhole"></i>
+                </div>
+                <span>Open Registrations</span>
+              </button>
+              <button class="action-tile">
+                <div class="tile-icon">
+                  <i class="fa-solid fa-bullhorn"></i>
+                </div>
+                <span>Publish Results</span>
+              </button>
+              <button class="action-tile">
+                <div class="tile-icon">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </div>
+                <span>Send Notifications</span>
+              </button>
+              <button class="action-tile">
+                <div class="tile-icon">
+                  <i class="fa-solid fa-download"></i>
+                </div>
+                <span>Download Reports</span>
+              </button>
+            </div>
+          </section>
+        </main>
+
+        <footer class="app-footer">
+          <span>© 2026 Champion Call. Built for organizers.</span>
+          <span>v2.4.1</span>
+        </footer>
+      </div>
+    </div>
+
+    </div> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/organizer/Dashboard.js"></script>
+    <script th:src="@{/js/fragments/organizerNavbar.js}"></script>
+  </body>
+</html>

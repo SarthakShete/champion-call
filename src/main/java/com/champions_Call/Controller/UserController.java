@@ -1,14 +1,20 @@
 package com.champions_Call.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import com.champions_Call.Form.SignUpForm;
@@ -27,8 +33,36 @@ public class UserController {
     @Autowired
     private UserServices userServices;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/home")
-    public String home(){
+    public String home(Model model, Authentication authentication, HttpSession session, HttpServletResponse response){
+
+        // Prevent any stale caching regardless of role (belt-and-suspenders)
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+
+        User currentUser = null;
+
+        boolean isLoggedIn = authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken);
+
+        if (isLoggedIn) {
+            // Prefer session (already set by your success handler) to avoid extra DB hit
+            Object sessionUser = session.getAttribute("loggedInUser");
+
+            if (sessionUser instanceof User) {
+                currentUser = (User) sessionUser;
+            } else {
+                // Fallback: fetch fresh from DB using the authenticated email
+                String email = authentication.getName(); // adjust if your principal's "name" isn't email
+                currentUser = userServices.getUserByEmail(email);
+            }
+        }
+
+        model.addAttribute("currentUser", currentUser);
+
         return "home";
     }
 
@@ -108,6 +142,7 @@ public class UserController {
             model.addAttribute("message", phoneNumberError);
             return "signUp";
         }
+        
         
         // This only runs if BOTH email and phone number are completely unique!
         User signUser = userServices.saveUser(user);

@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,56 +20,144 @@
   </head>
   <body>
     <!-- NAVBAR -->
-    <nav class="navbar">
-      <div class="logo">
-        <img
-          th:src="@{/Images/champion.webp}"
-          alt="ChampionCall Logo"
-          class="custom-logo"
-        />
-        ChampionCall
-      </div>
-      <div class="nav-actions">
-        <a th:href="@{/login}" class="login-link">Login</a>
-        <a th:href="@{/signUp}" class="btn-signup">Sign Up</a>
+    <nav class="navbar" id="navbar">
+      <div class="navbar-inner">
+        <a th:href="@{/home}" class="logo">
+          <img
+            th:src="@{/Images/champion.webp}"
+            alt="ChampionCall Logo"
+            class="custom-logo"
+          />
+          <span>CHAMPION<span class="accent">CALL</span></span>
+        </a>
+
+        <!-- NOT logged in -->
+        <div class="nav-actions" th:if="${currentUser == null}">
+          <a th:href="@{/login}" class="login-link">Login</a>
+          <a th:href="@{/signUp}" class="btn-signup">Sign Up</a>
+        </div>
+
+        <!-- Logged in -->
+        <div class="nav-actions" th:if="${currentUser != null}">
+          <div class="profile-menu">
+            <button
+              type="button"
+              class="profile-btn"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <img
+                class="profile-avatar"
+                th:src="${navPhoto != null && !navPhoto.isEmpty()
+                    ? navPhoto
+                    : 'https://ui-avatars.com/api/?background=151518&color=ff914d&bold=true&name=' + currentUser.firstName + '+' + currentUser.lastName}"
+                alt="Profile"
+              />
+              <span
+                class="profile-name"
+                th:text="${currentUser.firstName + ' ' + currentUser.lastName}"
+                >User</span
+              >
+              <i class="fa-solid fa-chevron-down chev"></i>
+            </button>
+
+            <div class="profile-dropdown" id="profileDropdown">
+              <div class="dropdown-header">
+                <strong
+                  th:text="${currentUser.firstName + ' ' + currentUser.lastName}"
+                  >User</strong
+                >
+                <small th:text="${currentUser.email}">email</small>
+              </div>
+              <a th:href="@{${dashboardUrl}}">
+                <i class="fa-solid fa-gauge"></i> Dashboard
+              </a>
+              <a th:href="@{/do-logout}" class="logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
 
     <!-- HERO -->
     <header class="hero-section">
-      <!-- Particle canvas background -->
       <canvas id="particles"></canvas>
 
-      <!-- Floating sport orbs -->
       <div class="orb orb-cricket">🏏</div>
       <div class="orb orb-football">⚽</div>
       <div class="orb orb-kabaddi">🤼</div>
 
-      <!-- Centered hero content -->
       <div class="hero-content">
         <div class="hero-badge hidden">
           <span class="badge-dot"></span> GRASSROOTS SPORTS, ORGANIZED
         </div>
+
         <h1 class="hero-title hidden">
-          EVERY MATCH<br />STARTS<br /><span class="text-orange"
-            >WITH A CALL</span
-          >
+          EVERY MATCH STARTS<br /><span class="text-orange">WITH A CALL</span>
         </h1>
+
         <p class="hero-subtext hidden">
           Discover tournaments, register teams, manage events, and build sports
           communities — all on one platform built for players and organizers.
         </p>
-        <div class="cta-group hidden">
-          <a class="btn-neon-blue" onclick="setRole('PLAYER')">
-            Join Tournament <i class="fa-solid fa-arrow-right"></i>
+
+        <div class="hero-actions">
+          <!-- You only use isAnonymous() when you want to show something to the general public.
+          so we wanna show a Explore Tournament button for not logged in user (new User) or player that's we used or for checking... -->
+          <a
+            sec:authorize="isAnonymous() or hasAnyAuthority('PLAYER', 'ROLE_PLAYER')"
+            class="btn-explore"
+            th:href="@{/api/organizer/tournament/list}"
+          >
+            <i class="fa-regular fa-eye"></i>
+            Explore tournaments
           </a>
-          <a class="btn-dark-outline" onclick="setRole('ORGANIZER')">
-            <i class="fa-solid fa-bullhorn"></i> Become Organizer
-          </a>
+
+          <div class="hero-role-cards" sec:authorize="isAnonymous()">
+            <div class="hero-role-card">
+              <div class="role-icon-box">
+                <i class="fa-solid fa-user-plus"></i>
+              </div>
+              <h3>Join Tournament</h3>
+              <p>
+                Register for upcoming events, track your matches, and follow
+                your standing on the leaderboard.
+              </p>
+              <a class="role-card-btn" onclick="setRole('PLAYER')">
+                Join as a player
+              </a>
+            </div>
+
+            <div class="hero-role-card">
+              <div class="role-icon-box">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div>
+              <h3>Become an Organizer</h3>
+              <p>
+                Set up tournaments, manage registrations, and publish live
+                results for your event in minutes.
+              </p>
+              <a class="role-card-btn" onclick="setRole('ORGANIZER')">
+                Become an organizer
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="hero-role-cards single"
+            sec:authorize="hasAnyAuthority('ORGANIZER', 'ROLE_ORGANIZER')"
+          >
+            <a th:href="@{/api/organizer/dashboard}" class="btn-dashboard-main">
+              <i class="fa-solid fa-gauge"></i>
+              My Dashboard
+              <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- Ticker -->
       <div class="ticker-bar">
         <div class="ticker-track">
           <span>LIVE SCORES &bull;</span>
@@ -172,7 +264,7 @@
     </section>
 
     <!-- SPORTS CATEGORIES -->
-    <section class="sports-categories">
+    <section class="sports-categories" id="tournaments">
       <div class="section-header hidden">
         <span class="sub-heading">PICK YOUR GAME</span>
         <h2 class="main-heading">Sports categories</h2>
@@ -317,14 +409,15 @@
           into organized competition.
         </p>
         <div class="cta-group justify-center">
-          <a href="#" class="btn-solid-white"
+          <a th:href="@{/login}" class="btn-solid-white"
             >Join Tournament <i class="fa-solid fa-arrow-right"></i
           ></a>
-          <a href="#" class="btn-dark-outline"
+          <a th:href="@{/login}" class="btn-dark-outline"
             ><i class="fa-solid fa-bullhorn"></i> Start Organizing</a
           >
         </div>
       </div>
+
       <div class="footer-bottom">
         <div class="footer-col brand-col hidden">
           <div class="logo">
@@ -373,8 +466,9 @@
           <a href="#">Privacy</a>
         </div>
       </div>
-    </footer> 
+    </footer>
 
-    <script src="/js/home.js"></script>
+    <script th:src="@{/js/home.js}"></script>
+    <script th:src="@{/js/navbar.js}" defer></script>
   </body>
 </html>

@@ -1,0 +1,770 @@
+:root {
+  --primary-orange: #ff914d;
+  --neon-blue: #3b38ff;
+  --bg-dark: #0b0b0e;
+  --bg-card: #151518;
+  --bg-input: #1c1c21;
+  --border-color: #222226;
+  --text-light: #ffffff;
+  --text-muted: #888888;
+  --danger-red: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+}
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  overflow-x: hidden;
+}
+
+/* ========================================== */
+/* GLOBAL TOP NAVBAR                          */
+/* ========================================== */
+.navbar {
+  height: 70px;
+  background-color: rgba(11, 11, 14, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+}
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* FIX: Search Bar width and padding */
+.search-bar {
+  background: #1c1c21;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  width: 350px; /* Fixed width prevents squishing */
+  height: 40px;
+}
+.search-bar i {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.search-bar input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  width: 100%;
+  height: 100%;
+  margin-left: 10px;
+  font-size: 0.9rem;
+}
+
+.nav-icon-btn {
+  position: relative;
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.nav-icon-btn .dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary-orange);
+  border-radius: 50%;
+}
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 1px solid var(--border-color);
+  padding-left: 20px;
+  cursor: pointer;
+}
+.user-profile img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--primary-orange);
+  object-fit: cover;
+}
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.user-role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ========================================== */
+/* WIZARD SPECIFIC LAYOUT                     */
+/* ========================================== */
+/* Viewport centers the form */
+.dashboard-viewport {
+  flex: 1;
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the ct-wrapper */
+}
+
+/* FIX: Wrapper limits the width to stop stretching */
+.ct-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Wizard Header */
+.ct-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+}
+.header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ct-header h1 {
+  font-family: "Bebas Neue", cursive;
+  font-size: 3rem;
+  letter-spacing: 1.5px;
+  color: var(--text-light);
+  line-height: 1;
+  margin: 0;
+}
+.auto-save-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding-bottom: 5px;
+}
+
+/* Wizard Split Layout */
+.ct-layout {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+/* Wizard Steps Sidebar */
+.wizard-sidebar {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 100px;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.3s ease;
+}
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--border-color);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+.step-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+.step-item.active .step-circle {
+  background-color: var(--primary-orange);
+  color: #000;
+}
+.step-item.active .step-label {
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+/* Form Card */
+.ct-form-card {
+  flex: 1;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 40px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.wizard-step {
+  display: none;
+  flex: 1;
+}
+.wizard-step.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.wizard-step h2 {
+  font-size: 1.6rem;
+  margin-bottom: 24px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+}
+.step-subtext {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+/* Standard Form Inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.form-group label {
+  display: block; /* Ensures the label takes its own line */
+  margin-bottom: 8px; /* Adjust this value (8px, 12px, etc.) to your liking */
+}
+.full-width {
+  width: 100%;
+}
+.grid-2-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+label {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+select option:disabled {
+  color: var(--text-muted);
+}
+
+/* Style for the select element itself */
+select {
+  color: var(--text-light); /* Default white text */
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+}
+
+/* This targets the 'placeholder' state */
+select:invalid {
+  color: var(--text-muted);
+}
+input,
+select,
+textarea {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  color: var(--text-light);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #555555;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary-orange);
+}
+
+.custom-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+.select-wrapper {
+  position: relative;
+}
+.select-wrapper select {
+  appearance: none;
+  padding-right: 40px;
+  cursor: pointer;
+}
+.select-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.input-with-icon {
+  position: relative;
+}
+.input-with-icon i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+.input-with-icon input {
+  padding-left: 44px;
+}
+
+/* Prizes Rows */
+.prize-row-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.prize-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-input);
+  border-radius: 12px;
+  padding: 16px;
+}
+.row-input {
+  padding: 12px 16px;
+  font-size: 0.92rem;
+}
+.name-input {
+  flex: 1.2;
+  min-width: 160px;
+}
+.value-input {
+  flex: 1.6;
+  min-width: 200px;
+}
+.select-wrap {
+  position: relative;
+  flex: 0 0 130px;
+}
+.row-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 12px 36px 12px 14px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+.row-delete-btn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.row-delete-btn:hover {
+  color: var(--danger-red);
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.add-prize-btn {
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  border: 1.5px dashed var(--border-color);
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+}
+.add-prize-btn:hover {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  background: rgba(255, 145, 77, 0.04);
+}
+
+/* Branding */
+.file-upload-box {
+  background: var(--bg-input);
+  border: 1.5px dashed var(--border-color);
+  border-radius: 12px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.file-upload-box:hover {
+  border-color: var(--primary-orange);
+  background: rgba(255, 145, 77, 0.02);
+}
+.file-upload-box i {
+  font-size: 2rem;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+.file-upload-box span {
+  color: var(--text-light);
+  font-weight: 500;
+}
+.file-upload-box p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.radio-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.radio-card {
+  cursor: pointer;
+}
+.radio-card input {
+  display: none;
+}
+.rc-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-input);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+.rc-content i {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+.rc-content div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rc-content strong {
+  color: var(--text-light);
+  font-size: 1.05rem;
+}
+.rc-content span {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.radio-card:first-child .rc-content {
+  margin-bottom: 15px;
+}
+.radio-card input:checked + .rc-content {
+  border-color: var(--primary-orange);
+  background: rgba(255, 145, 77, 0.05);
+}
+.radio-card input:checked + .rc-content i {
+  color: var(--primary-orange);
+}
+/* Hover effect */
+.rc-content:hover {
+  border-color: #ff8c00 !important; /* Shows subtle border on hover */
+}
+.rc-content:hover i {
+  color: #ff8c00 !important; /* Icon turns orange on hover */
+}
+
+/* Footer Actions */
+.ct-form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 30px;
+  border-top: 1px solid var(--border-color);
+}
+.btn-cancel {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.btn-cancel:hover {
+  color: var(--text-light);
+}
+.btn-save-next {
+  background: var(--primary-orange);
+  color: #000;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.btn-save-next:hover {
+  background: #ff7a29;
+}
+
+/* List */
+#rulesList {
+  width: 100%;
+  margin-top: 10px;
+  display: block !important; /* Ensure it's not hidden by flex layout */
+}
+.rule-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+.rule-input {
+  flex: 1; /* Makes input take up all available space */
+}
+.rule-item {
+  background: #3f3f46;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rule-edit-input {
+  background: #2a2a2a;
+  border: 1px solid #f97316;
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  width: 70%;
+}
+.rule-actions {
+  display: flex;
+  gap: 10px; /* Space between pencil and trash */
+}
+.btn-add {
+  background: #f97316;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+}
+.btn-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.btn-edit,
+.btn-del {
+  background: transparent !important;
+  /*Removestheuglydefaultgreybox*/
+  border: none !important;
+  /*Removesthedefaultborder*/
+  padding: 5px 8px !important;
+  /*Addsbreathingroomaroundtheicon*/
+  cursor: pointer !important;
+  /*Changescursortopointeronhover*/
+  transition: transform 0.2s, opacity 0.2s;
+  /*Smoothinteraction*/
+  display: flex !important ;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  -webkit-transition: transform 0.2s, opacity 0.2s;
+  -moz-transition: transform 0.2s, opacity 0.2s;
+  -ms-transition: transform 0.2s, opacity 0.2s;
+  -o-transition: transform 0.2s, opacity 0.2s;
+}
+.btn-edit i {
+  color: #fbbf24; /* Matches the orange pencil in the screenshot */
+  transition: color 0.2s;
+}
+
+/* Target the delete icon (Trash) to be red */
+.btn-del i {
+  color: #ef4444; /* Matches the red trash icon in the screenshot */
+  transition: color 0.2s;
+}
+/* Hover effects */
+.btn-edit:hover {
+  background: rgba(255, 255, 255, 0.1); /* Subtle highlight on hover */
+  transform: scale(1.1); /* Slight pop effect */
+  filter: brightness(1.2);
+}
+
+.btn-del:hover {
+  background: rgba(255, 0, 0, 0.2); /* Subtle red background on delete */
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+.btn-save-rule {
+  color: #22c55e;
+}
+
+#customRulesArea {
+  display: none;
+}
+.btn-save {
+  background-color: #f97316;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.error-msg {
+  color: #ff4d4d; /* slightly softer red */
+  font-size: 0.78rem; /* smaller than input text */
+  margin-top: 6px; /* breathing room from input */
+  display: block;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+/* ball type css */
+/* Force the container to respect the display property */
+#subSportContainer {
+  transition: opacity 0.3s ease;
+}
+/* If you use a class to hide, use this */
+.hidden {
+  display: none !important;
+}
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .ct-layout {
+    flex-direction: column;
+    gap: 30px;
+  }
+  .wizard-sidebar {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    position: static;
+  }
+  .step-label {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 2000;
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  .main-content,
+  .sidebar.collapsed ~ .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  .search-bar,
+  .user-info,
+  .profile-chevron {
+    display: none;
+  }
+  .dashboard-viewport {
+    padding: 24px;
+  }
+  .ct-form-card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-2-col {
+    grid-template-columns: 1fr;
+  }
+  .ct-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .ct-header h1 {
+    font-size: 2.2rem;
+  }
+  .prize-row {
+    flex-wrap: wrap;
+  }
+  .name-input,
+  .value-input {
+    flex: 1 1 100%;
+  }
+  .select-wrap {
+    flex: 1 1 calc(100% - 56px);
+  }
+  .row-delete-btn {
+    margin-left: auto;
+  }
+}

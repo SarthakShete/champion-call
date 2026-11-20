@@ -1,0 +1,696 @@
+:root {
+  --primary-orange: #ff914d;
+  --bg-dark: #0b0b0e;
+  --bg-card: #151518;
+  --border-color: #222226;
+  --text-white: #ffffff;
+  --text-body: #b7b7bc;
+  --text-muted: #888888;
+  --text-sub: #a0a0a0;
+  --success-green: #10b981;
+  --danger-red: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-body);
+  min-height: 100vh;
+}
+
+/* ===========================================
+    PAGE LAYOUT
+    =========================================== */
+.onboard-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 32px 20px 40px;
+}
+
+.onboard-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 28px;
+  letter-spacing: 0.5px;
+}
+
+.onboard-logo i {
+  color: var(--primary-orange);
+}
+
+.onboard-logo .accent {
+  color: var(--primary-orange);
+}
+
+/* ===========================================
+    STEP TRACKER
+    =========================================== */
+.step-tracker {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.step-dot.active {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  background: rgba(255, 145, 77, 0.1);
+}
+
+.step-dot.done {
+  background: var(--primary-orange);
+  border-color: var(--primary-orange);
+  color: #0b0b0e;
+}
+
+.step-line {
+  width: 40px;
+  height: 1.5px;
+  background: var(--border-color);
+}
+
+.step-line.done {
+  background: var(--primary-orange);
+}
+
+/* ===========================================
+    CARD
+    =========================================== */
+.onboard-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 36px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.onboard-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.step-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--primary-orange);
+  text-transform: uppercase;
+}
+
+.onboard-header h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin: 8px 0 6px;
+}
+
+.onboard-header p {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+/* ===========================================
+    AVATAR UPLOAD BLOCK
+    =========================================== */
+.avatar-upload-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.avatar-circle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: rgba(255, 145, 77, 0.12);
+  border: 2px solid rgba(255, 145, 77, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--primary-orange);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-upload-label {
+  font-size: 0.82rem;
+  color: var(--primary-orange);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 145, 77, 0.3);
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.photo-upload-label:hover {
+  background: rgba(255, 145, 77, 0.08);
+  border-color: var(--primary-orange);
+}
+
+.photo-upload-label i {
+  font-size: 0.78rem;
+}
+
+/* ===========================================
+    WHY BANNER (Trust explanation)
+    =========================================== */
+.why-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255, 145, 77, 0.06);
+  border: 1px solid rgba(255, 145, 77, 0.2);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 24px;
+}
+
+.why-banner i {
+  color: var(--primary-orange);
+  font-size: 0.95rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.why-banner p {
+  font-size: 0.8rem;
+  color: var(--text-body);
+  line-height: 1.5;
+}
+
+/* ===========================================
+    FORM (consolidated — single source of truth)
+    =========================================== */
+.onboard-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* <-- this is the label-to-input spacing */
+  margin-bottom: 4px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.required {
+  color: var(--primary-orange);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
+  color: var(--text-white);
+  font-family: "Inter", sans-serif;
+  font-size: 0.92rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #5a5a60;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #101010 inset !important; /* Forces the dark background */
+  -webkit-text-fill-color: #ffffff !important; /* Forces the text to be white */
+  transition: background-color 5000s ease-in-out 0s; /* Keeps the color fixed */
+}
+
+/* Ensure standard input focus doesn't revert to white */
+.onboard-form input:focus {
+  background: #262626 !important;
+  color: #ffffff !important;
+}
+/* Date input */
+
+#dob {
+  background: rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-white) !important;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color-scheme: dark; /* This turns the calendar widget dark */
+  appearance: none; /* Removes browser default styling */
+  -webkit-appearance: none;
+}
+
+/* Force the calendar icon inside the date picker to be white */
+#dob::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(0.8);
+  cursor: pointer;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 3px rgba(255, 145, 77, 0.15);
+}
+
+.form-group input:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+
+.form-group select option {
+  background: var(--bg-card);
+  color: var(--text-white);
+}
+
+/* Ensure the date input icon is visible on dark background */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.field-hint {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ===========================================
+    FILE UPLOAD DROPZONE
+    =========================================== */
+.upload-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1.5px dashed var(--border-color);
+  border-radius: 10px;
+  padding: 28px 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.upload-dropzone:hover {
+  border-color: var(--primary-orange);
+  background: rgba(255, 145, 77, 0.04);
+}
+
+.upload-dropzone i {
+  font-size: 1.6rem;
+  color: var(--primary-orange);
+  margin-bottom: 4px;
+}
+
+.upload-title {
+  font-size: 0.85rem;
+  color: var(--text-white);
+  font-weight: 500;
+}
+
+.upload-hint {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.upload-filename {
+  display: none;
+  font-size: 0.78rem;
+  color: var(--primary-orange);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ===========================================
+    STEP BUTTON ROW (Back + Continue)
+    =========================================== */
+.step-btn-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* ===========================================
+    PRIMARY BUTTON (Continue / Complete Profile)
+    =========================================== */
+.btn-primary-action {
+  width: 100%;
+  margin-top: 0;
+  background: var(--primary-orange);
+  color: #0b0b0e;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary-action:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-primary-action:active {
+  transform: scale(0.98);
+}
+
+/* ===========================================
+    SECONDARY / BACK BUTTON
+    =========================================== */
+.btn-secondary-action {
+  width: 100%;
+  align-self: stretch;
+  background: transparent;
+  color: var(--text-sub);
+  border: 1px solid var(--border-color);
+  padding: 14px;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.btn-secondary-action:hover {
+  border-color: var(--primary-orange);
+  background: rgba(255, 145, 77, 0.06);
+  color: var(--primary-orange);
+}
+
+.btn-secondary-action:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary-action i {
+  font-size: 0.8rem;
+}
+
+/* ===========================================
+    STATUS ROW (pending / secure)
+    =========================================== */
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.status-row i {
+  font-size: 0.85rem;
+}
+
+.status-row.pending i {
+  color: var(--primary-orange);
+}
+
+.status-row.secure i {
+  color: var(--success-green);
+}
+
+/* ===========================================
+    BOTTOM NOTE
+    =========================================== */
+.onboard-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 460px;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+}
+
+.onboard-note i {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.onboard-note p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ===========================================
+    CHECKBOX GRID (generic, if used elsewhere)
+    =========================================== */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.checkbox-grid label {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-white);
+}
+
+.checkbox-grid label:hover {
+  border-color: var(--primary-orange);
+}
+
+/* ===========================================
+    KEY STRENGTHS
+    =========================================== */
+.strengths-block {
+  margin-top: 12px;
+}
+
+.strengths-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.strengths-header h4 {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.strengths-sport-select {
+  width: auto;
+  min-width: 140px;
+  margin-top: 0;
+}
+
+@media (max-width: 600px) {
+  .strength-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.strength-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: rgba(
+    0,
+    0,
+    0,
+    0.25
+  ) !important; /* Forces the same black/dark grey */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+}
+
+/* Fix label alignment */
+.strength-card span {
+  font-size: 0.92rem;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+  flex-grow: 1;
+}
+
+/* Fix checkbox and active state */
+.strength-card input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px !important; /* Standard small size */
+  height: 15px !important; /* Standard small size */
+  margin: 0 !important; /* Remove all extra space around the box */
+  padding: 0 !important;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0; /* Ensures it doesn't shrink when text is long */
+}
+/* Update this specific block */
+.strength-card input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px; /* Centered for 16px box */
+  top: 2px; /* Centered for 16px box */
+  width: 4px;
+  height: 8px;
+  /* Change border color to white for maximum contrast */
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Also ensure the background stands out */
+.strength-card input[type="checkbox"]:checked {
+  background: #ff9100;
+  border-color: #ff9100;
+}
+.other-strength-input {
+  margin-top: 12px;
+}
+/* ===========================================
+    RESPONSIVE
+    =========================================== */
+@media (max-width: 480px) {
+  .onboard-card {
+    padding: 24px;
+  }
+
+  .step-line {
+    width: 24px;
+  }
+}
+/* ===== FORM GROUP — Label to Input Spacing (final, guaranteed) ===== */
+
+.onboard-form .form-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  margin-bottom: 18px !important;
+}
+
+.onboard-form .form-group label {
+  display: block !important;
+  margin: 0 !important;
+  font-size: 0.82rem;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.onboard-form .form-group input,
+.onboard-form .form-group select,
+.onboard-form .form-group textarea {
+  margin: 0 !important;
+}

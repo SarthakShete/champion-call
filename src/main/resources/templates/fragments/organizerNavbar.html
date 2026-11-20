@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <header
+      th:fragment="organizerNavbar(activePage, organizerProfile)"
+      class="navbar"
+    >
+      <div
+        class="mobile-overlay"
+        id="mobileOverlay"
+        onclick="toggleSidebar()"
+      ></div>
+
+      <div class="modal-overlay" id="onboardingModal" style="display: none">
+        <div class="modal-box">
+          <h3>Complete Your Setup</h3>
+          <p>
+            Please complete your organizer profile to unlock tournament
+            configuration systems.
+          </p>
+          <div class="modal-btn-group">
+            <button
+              type="button"
+              class="modal-btn modal-btn-cancel"
+              onclick="document.getElementById('onboardingModal').classList.remove('show')"
+            >
+              Not Now
+            </button>
+            <button
+              type="button"
+              class="modal-btn modal-btn-confirm"
+              onclick="window.location.href='/api/organizer/basic-info'"
+            >
+              Complete Setup
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="navbar-left">
+        <button class="toggle-btn" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            placeholder="Search tournaments, teams, players..."
+          />
+        </div>
+      </div>
+
+      <div class="navbar-right">
+        <button
+          class="btn-new-tournament"
+          th:if="${activePage=='dashboard'}"
+          th:onclick="${organizerProfile != null and organizerProfile.completeProfile} 
+              ? 'window.location.href=\'/api/organizer/tournament/new\'' 
+              : 'completeProfile(event)'"
+        >
+          <i class="fa-solid fa-plus"></i>
+          <span class="btn-text">New Tournament</span>
+        </button>
+
+        <!-- ===== DYNAMIC NOTIFICATIONS DROPDOWN ===== -->
+        <div class="notifications-dropdown">
+          <div class="nav-icon-btn bell-btn">
+            <i class="fa-solid fa-bell"></i>
+            <span
+              class="dot"
+              th:if="${notifications != null and #lists.size(notifications) > 0}"
+            ></span>
+            <span
+              class="badge-count"
+              th:text="${notifications != null ? #lists.size(notifications) : 0}"
+              th:if="${notifications != null and #lists.size(notifications) > 0}"
+              >0</span
+            >
+          </div>
+
+          <div class="notification-list">
+            <div
+              th:if="${notifications == null or #lists.isEmpty(notifications)}"
+              class="no-notif"
+            >
+              No new alerts
+            </div>
+
+            <div th:each="notif : ${notifications}" class="notification-item">
+              <h4 th:text="${notif.title}">Title</h4>
+              <p th:text="${notif.message}">Message</p>
+              <a th:href="${notif.matchUrl}" class="btn-sm btn-orange"
+                >Open Scoring Panel</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-icon-btn">
+          <i class="fa-solid fa-bell"></i><span class="dot"></span>
+        </div>
+
+        <div class="user-profile" id="userProfileDropdown">
+          <!-- <img
+            th:src="${organizerProfile != null} ? ${organizerProfile.displayProfilePicture} : 'https://ui-avatars.com/api/?name=Organizer&background=151518&color=ff914d'"
+            alt="Organizer Profile"
+            class="profile-img"
+          /> -->
+          <img
+            th:src="${organizerProfile != null} ? ${organizerProfile.displayProfilePicture} : 'https://ui-avatars.com/api/?name=Organizer&background=151518&color=ff914d'"
+            alt="Organizer Profile"
+            class="profile-img"
+            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Organizer&background=151518&color=ff914d';"
+          />
+          <div class="user-info">
+            <span
+              class="user-name"
+              th:text="${organizerProfile != null and organizerProfile.organizationName != null} ? ${organizerProfile.organizationName} : 'Aarav Mehta'"
+              >Aarav Mehta</span
+            >
+            <span class="user-role">Organizer</span>
+          </div>
+          <i
+            class="fa-solid fa-chevron-down profile-chevron"
+            id="chevronIcon"
+          ></i>
+
+          <div class="dropdown-menu" id="profileDropdownMenu">
+            <a th:href="@{/api/organizer/basic-info}"
+              ><i class="fa-solid fa-user-gear"></i> Edit Profile</a
+            >
+            <a th:href="@{/api/organizer/dashboard}"
+              ><i class="fa-solid fa-chart-line"></i> Dashboard</a
+            >
+            <hr class="dropdown-divider" />
+            <a th:href="@{/do-logout}" class="logout-item"
+              ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+  </body>
+</html>

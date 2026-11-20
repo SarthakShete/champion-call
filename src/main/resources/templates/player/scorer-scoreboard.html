@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChampionCall Scorekeeper</title>
+
+    <!-- Fonts used by the scorekeeper UI -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+
+    <!-- Main scorekeeper styles -->
+    <link rel="stylesheet" th:href="@{/css/fragments/Managing_Scoring.css}" />
+
+    <!-- This page has no organizer layout, so give it the dark background -->
+    <style>
+      body {
+        margin: 0;
+        background: #0b0b0d;
+        min-height: 100vh;
+      }
+      .cc-wrap {
+        display: block;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 16px;
+        box-sizing: border-box;
+      }
+      #scorekeeperRoot {
+        display: block;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Scoreboard box: Managing_Scoring.js draws the scoreboard inside this -->
+    <div class="cc-wrap">
+      <div
+        id="scorekeeperRoot"
+        class="cc-root"
+        data-role="SCORER"
+        th:attr="data-match-id=${matchId}, data-scorekeeper=${scorerName}"
+      ></div>
+
+      <!-- Squads.js mounts the popup here -->
+      <div id="squadsRoot" class="cc-root"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script
+      th:src="@{/js/fragments/Managing_Scoring/Managing_Scoring.js}"
+    ></script>
+    <script
+      th:src="@{/js/fragments/Managing_Scoring/cricket-websocket.js}"
+    ></script>
+  </body>
+  <script>
+    window.addEventListener("load", function () {
+      window.initScorekeeper();
+    });
+  </script>
+</html>

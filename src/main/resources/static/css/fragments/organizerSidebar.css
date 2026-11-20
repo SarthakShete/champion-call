@@ -1,0 +1,206 @@
+:root {
+  --primary-orange: #ff914d;
+  --neon-blue: #3b38ff;
+  --bg-dark: #0b0b0e;
+  --bg-card: #151518;
+  --border-color: #222226;
+  --text-light: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --success-green: #10b981;
+  --danger-red: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background-color: #0d0d10;
+  border-right: 1px solid var(--border-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+.sidebar.collapsed {
+  width: 78px;
+}
+.sidebar-brand {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  font-size: 1.25rem;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+.sidebar-brand .brand-icon {
+  color: var(--primary-orange);
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.sidebar-brand .brand-text span {
+  color: var(--primary-orange);
+}
+.sidebar.collapsed .brand-text,
+.sidebar.collapsed .menu-label,
+.sidebar.collapsed .menu-item span,
+.sidebar.collapsed .menu-item .badge {
+  display: none !important;
+}
+.sidebar-menu {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 16px;
+}
+.menu-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #52525b;
+  margin: 20px 0 8px 12px;
+  font-weight: 700;
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.menu-item i {
+  font-size: 1.1rem;
+  width: 24px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.menu-item:hover,
+.menu-item.active {
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+}
+.menu-item.active {
+  border-left: 3px solid var(--primary-orange);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 145, 77, 0.1) 0%,
+    transparent 100%
+  );
+}
+.badge {
+  background: #27272a;
+  color: var(--text-light);
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.badge.alert {
+  background: rgba(255, 145, 77, 0.15);
+  color: var(--primary-orange);
+}
+
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 950;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.mobile-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+.main-content {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  min-height: 100vh;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+.sidebar.collapsed ~ .main-content {
+  margin-left: 78px;
+  width: calc(100% - 78px);
+}
+
+/* =========================================================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================================================= */
+
+@media (max-width: 768px) {
+  /* Sidebar becomes an off-canvas drawer instead of a docked column */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px;
+    z-index: 2000;
+  }
+
+  /* Matches the actual class your JS toggles: "open" */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* When opened on mobile, always show full labels even if "collapsed"
+     was toggled earlier on desktop — collapsed is a desktop-only concept */
+  .sidebar.open .brand-text,
+  .sidebar.open .menu-label,
+  .sidebar.open .menu-item span,
+  .sidebar.open .menu-item .badge {
+    display: block !important;
+  }
+
+  .sidebar.open.collapsed {
+    width: 260px;
+  }
+
+  /* Main content always spans full width on mobile — sidebar floats above it */
+  .main-content,
+  .sidebar.collapsed ~ .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 85vw;
+    max-width: 300px;
+  }
+
+  .sidebar.open.collapsed {
+    width: 85vw;
+    max-width: 300px;
+  }
+
+  .sidebar-brand {
+    padding: 0 16px;
+    font-size: 1.1rem;
+  }
+
+  .sidebar-menu {
+    padding: 20px 12px;
+  }
+}

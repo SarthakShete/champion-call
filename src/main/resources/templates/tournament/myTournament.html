@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/tournament/myTournament.css}" />
+    <link rel="stylesheet" th:href="@{/css/fragments/organizerNavbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/fragments/organizerSidebar.css}" />
+    <title>ChampionCall Dashboard</title>
+  </head>
+  <body>
+    <div
+      class="mobile-overlay"
+      id="mobileOverlay"
+      onclick="toggleSidebar()"
+    ></div>
+
+    <div class="dashboard-layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <img
+            th:src="@{/Images/champion.webp}"
+            alt="ChampionCall Logo"
+            class="custom-logo"
+          />
+          <span class="brand-text">CHAMPION<span>CALL</span></span>
+        </div>
+        <div
+          th:replace="~{fragments/organizerSidebar :: organizerSidebar('myTournament',${organizerProfile})}"
+        ></div>
+      </aside>
+
+      <main class="main-content">
+        <div
+          th:replace="~{fragments/organizerNavbar :: organizerNavbar('myTournament',${organizerProfile})}"
+        ></div>
+        <div class="dashboard-header">
+          <div class="left">
+            <h1>My Tournaments</h1>
+            <p>
+              Manage and monitor your tournaments, registrations and revenue
+            </p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span>Total Tournaments</span>
+            <h2 th:text="${totalCount}">0</h2>
+          </div>
+          <div class="stat-card green">
+            <span>Registration Open</span>
+            <h2 th:text="${openCount}">0</h2>
+          </div>
+          <div class="stat-card blue">
+            <span>Upcoming</span>
+            <h2 th:text="${upcomingCount}">0</h2>
+          </div>
+          <div class="stat-card red">
+            <span>Ongoing</span>
+            <h2 th:text="${ongoingCount}">0</h2>
+          </div>
+          <div class="stat-card purple">
+            <span>Completed</span>
+            <h2 th:text="${completedCount}">0</h2>
+          </div>
+          <div class="stat-card violet">
+            <span>Draft</span>
+            <h2 th:text="${draftCount}">0</h2>
+          </div>
+          <div class="stat-card orange">
+            <span>Total Revenue</span>
+            <h2
+              th:text="'₹' + ${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')}"
+            >
+              $0
+            </h2>
+          </div>
+        </div>
+        <section class="my-tournament-list">
+          <!-- Section Header -->
+          <div class="section-header">
+            <div class="left">
+              <h2>Your Tournaments</h2>
+              <p>Manage, monitor and update your tournaments.</p>
+            </div>
+          </div>
+
+          <form id="filterForm" class="toolbar">
+            <input
+              type="text"
+              id="tournamentSearch"
+              name="keyword"
+              class="search-box"
+              placeholder="Search tournament..."
+              autocomplete="off"
+            />
+            <select class="filter-select" name="sport">
+              <option value="">Select Sport</option>
+              <option value="CRICKET">Cricket</option>
+              <option value="FOOTBALL">Football</option>
+              <option value="Kabaddi">Kabaddi</option>
+            </select>
+            <select class="filter-select" name="status">
+              <option value="ALL">All Status</option>
+              <option value="UNPUBLISHED">Draft</option>
+              <option value="REGISTRATION_OPEN">Registration Open</option>
+              <option value="ONGOING">Ongoing</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+            <button type="button" id="applyFiltersBtn" class="filter-btn">
+              Apply Filters
+            </button>
+          </form>
+
+          <!-- Tournament Grid Container & Pagination Fragment Integration -->
+          <div id="tournament-results-container">
+            <div
+              th:replace="~{fragments/tournament_list :: tournament-grid}"
+            ></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+  <script th:src="@{/js/organizer/organizerNavbar.js}"></script>
+  <script th:src="@{/js/organizer/myTournament.js}"></script>
+</html>

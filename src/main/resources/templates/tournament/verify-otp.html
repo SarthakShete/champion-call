@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify OTP - ChampionCall</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/organizer/verify-otp.css}" />
+  </head>
+  <body>
+    <div class="brand-header">🏆 CHAMPION<span>CALL</span></div>
+
+    <div class="stepper">
+      <div class="step completed">1</div>
+      <div class="step-line"></div>
+      <div class="step active">2</div>
+      <div class="step-line"></div>
+      <div class="step">3</div>
+    </div>
+
+    <div class="otp-container">
+      <h2>Verify Phone Number</h2>
+      <p class="subtitle" id="instructionText">
+        We've dispatched a secure verification token to your registered mobile
+        device via SMS.
+      </p>
+
+      <div class="timer-display" id="timerContainer">
+        Time remaining:
+        <span
+          id="countdownClock"
+          style="color: var(--primary); font-weight: bold"
+          >45</span
+        >
+        seconds
+      </div>
+
+      <div class="alert-error" th:if="${error}" th:text="${error}"></div>
+
+      <form th:action="@{/api/organizer/submit-otp}" method="POST">
+        <div class="form-group">
+          <label
+            th:if="${session.pendingProfileData != null}"
+            th:text="'Enter Code Sent To: ' + ${session.pendingProfileData.phoneNumber}"
+            >Enter Verification Code</label
+          >
+          <label th:if="${session.pendingProfileData == null}"
+            >Enter Verification Code</label
+          >
+
+          <input
+            type="text"
+            id="otpCode"
+            name="otpCode"
+            class="otp-input"
+            placeholder="••••••"
+            maxlength="6"
+            pattern="\d{6}"
+            required
+            autocomplete="one-time-code"
+            inputmode="numeric"
+          />
+        </div>
+
+        <button type="submit" id="submitButton" class="btn-submit">
+          Verify & Continue ➔
+        </button>
+      </form>
+
+      <div class="resend-box" id="resendWrapper" style="display: none">
+        Didn't receive the code?
+        <a class="resend-link" onclick="handleResendOTP()">Resend OTP</a>
+        <div id="toastNotification" class="toast-msg"></div>
+      </div>
+
+      <a th:href="@{/api/organizer/basic-info}" class="back-link"
+        >← Change Phone Number</a
+      >
+    </div>
+
+    <script th:src="@{/js/organizer/verify-otp.js}"></script>
+  </body>
+</html>

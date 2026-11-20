@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Summer Championship 2026 - Manage Tournament</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" th:href="@{/css/fragments/organizerNavbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/fragments/liveScoringContent.css}" />
+    <link rel="stylesheet" th:href="@{/css/tournament/manageTournament.css}" />
+  </head>
+  <body>
+    <!-- ===== TOP ORGANIZER NAVBAR (fragment) ===== -->
+    <div
+      th:replace="~{fragments/organizerNavbar :: organizerNavbar('manageTournament',${organizerProfile})}"
+    ></div>
+
+    <input type="hidden" id="tournamentId" th:value="${tournament.id}" />
+
+    <!-- Mobile overlay for sidebar slide-in -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-shell">
+      <!-- ===== SIDEBAR ===== -->
+      <aside class="sidebar">
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link" data-tab="overview">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M13 2L3 14h7l-1 8 11-14h-7l1-6z" />
+            </svg>
+            <span>Overview</span>
+          </a>
+          <a href="#" class="sidebar-link" data-tab="participants">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+            </svg>
+            <span>Participants</span>
+          </a>
+          <a href="#" class="sidebar-link active" data-tab="brackets">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+              />
+            </svg>
+            <span>Fixtures</span>
+          </a>
+          <a href="#" class="sidebar-link" onclick="loadLiveScoring(event)">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="2.5" />
+              <path d="M8.5 8.5a5 5 0 000 7" />
+              <path d="M15.5 8.5a5 5 0 010 7" />
+              <path d="M5.5 5.5a9 9 0 000 13" />
+              <path d="M18.5 5.5a9 9 0 010 13" />
+            </svg>
+            <span>Live Scoring</span>
+          </a>
+          <a href="#" class="sidebar-link" data-tab="schedule">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" />
+            </svg>
+            <span>Schedule</span>
+          </a>
+          <a href="#" class="sidebar-link" data-tab="results">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M8 21h8M12 17v4M17 3H7v6a5 5 0 0010 0V3z" />
+              <path d="M17 5h2a2 2 0 010 4h-2M7 5H5a2 2 0 000 4h2" />
+            </svg>
+            <span>Results</span>
+          </a>
+          <a href="#" class="sidebar-link" data-tab="leaderboard">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
+            </svg>
+            <span>Leaderboard</span>
+          </a>
+          <a href="#" class="sidebar-link" data-tab="settings">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l-.06-.06a2 2 0 112.83 2.83l.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"
+              />
+            </svg>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="#" class="sidebar-link logout-link">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+              <path d="M16 17l5-5-5-5" />
+              <path d="M21 12H9" />
+            </svg>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- ===== MAIN CONTENT ===== -->
+      <div class="page">
+        <div class="topbar">
+          <a href="#" class="back-link">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Back to Tournaments
+          </a>
+        </div>
+
+        <!-- ============================================================
+             REMOVED (per request): the tournament title/header-row block
+             (page-title "AMBADE LEAGUE" + Publish Updates / Start Round
+             buttons), the stats-grid block (Registered Teams / Matches
+             Completed / Current Phase / Prize Pool cards), AND the tabs
+             strip (Overview / Participants / Brackets / Settings).
+             Nothing else on the page was modified.
+             ============================================================ -->
+
+        <section class="tab-panel active" id="tab-overview">
+          <div class="two-col">
+            <div class="col-main">
+              <div class="panel">
+                <h2 class="panel-title">Quick Actions</h2>
+                <div class="quick-actions-grid">
+                  <button class="qa-btn qa-btn-orange">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M13 2L3 14h7l-1 8 11-14h-7l1-6z" />
+                    </svg>
+                    Start Next Round
+                  </button>
+                  <button class="qa-btn qa-btn-violet">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+                      <path d="M13.73 21a2 2 0 01-3.46 0" />
+                    </svg>
+                    Send Announcement
+                  </button>
+                  <button class="qa-btn qa-btn-outline">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 6v6l4 2" />
+                    </svg>
+                    View Schedule
+                  </button>
+                  <button class="qa-btn qa-btn-outline">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 8v4M12 16h.01" />
+                    </svg>
+                    Manage Issues
+                  </button>
+                </div>
+              </div>
+
+              <div class="panel">
+                <h2 class="panel-title">Recent Match Alerts</h2>
+                <div class="alert-list">
+                  <div class="alert-item">
+                    <span class="alert-dot dot-orange"></span>
+                    <div>
+                      <div class="alert-text">
+                        Team "Phoenix Rising" has not submitted their bracket
+                      </div>
+                      <div class="alert-time">5 mins ago</div>
+                    </div>
+                  </div>
+                  <div class="alert-item">
+                    <span class="alert-dot dot-violet"></span>
+                    <div>
+                      <div class="alert-text">
+                        Match results: Team A vs Team B - 2:1 Victory
+                      </div>
+                      <div class="alert-time">12 mins ago</div>
+                    </div>
+                  </div>
+                  <div class="alert-item">
+                    <span class="alert-dot dot-gray"></span>
+                    <div>
+                      <div class="alert-text">
+                        Registration closed. 32 teams confirmed.
+                      </div>
+                      <div class="alert-time">1 hour ago</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-side">
+              <div class="panel">
+                <h2 class="panel-title">Tournament Status</h2>
+                <div class="status-list">
+                  <div class="status-row">
+                    <span>Status</span
+                    ><span class="value-orange">In Progress</span>
+                  </div>
+                  <div class="status-row">
+                    <span>Round</span
+                    ><span class="value-white">Quarter-Finals</span>
+                  </div>
+                  <div class="status-row">
+                    <span>Teams Active</span
+                    ><span class="value-white">32/32</span>
+                  </div>
+                  <div class="status-row">
+                    <span>Spectators</span
+                    ><span class="value-violet">1.2K</span>
+                  </div>
+                  <div class="status-row">
+                    <span>Next Update</span
+                    ><span class="value-white">2:30 PM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Participants Section (Full width when active, with clickable team names) -->
+        <section class="tab-panel" id="tab-participants">
+          <div class="participants-full-container">
+            <div class="panel full-width-panel">
+              <div class="panel-header-row">
+                <h2 class="panel-title">Participants / Teams Management</h2>
+              </div>
+              <div class="table-controls">
+                <div class="search-box">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                  </svg>
+                  <input type="text" placeholder="Search teams..." />
+                </div>
+                <div class="filter-dropdown-container">
+                  <button id="filterDropdownBtn" class="btn btn-outline-violet">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+                    </svg>
+                    Filter
+                  </button>
+
+                  <!-- Dropdown Menu -->
+                  <div id="filterMenu" class="dropdown-menu-custom">
+                    <a href="#" class="filter-option" data-status="ALL"
+                      >All Status</a
+                    >
+                    <a href="#" class="filter-option" data-status="PENDING"
+                      >Pending</a
+                    >
+                    <a href="#" class="filter-option" data-status="APPROVED"
+                      >Approved</a
+                    >
+                    <a href="#" class="filter-option" data-status="REJECTED"
+                      >Rejected</a
+                    >
+                  </div>
+                </div>
+                <button
+                  class="btn btn-orange"
+                  id="generateFixturesBtn"
+                  onclick="openChoiceModal()"
+                >
+                  <i class="fas fa-sitemap" style="margin-right: 6px"></i>
+                  Automatic Generation
+                </button>
+              </div>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Avatar</th>
+                      <th>Team Name</th>
+                      <th>Captain / Org</th>
+                      <th>Registration Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="participants-tbody">
+                    <!-- Dynamic iteration over teams fetched from backend -->
+                    <tr
+                      class="team-row"
+                      th:each="team : ${teams}"
+                      th:data-team-id="${team.id}"
+                    >
+                      <!-- Team Avatar / Initials fallback -->
+                      <td class="avatar-cell">
+                        <img
+                          th:src="${team.teamLogo}"
+                          alt="Logo"
+                          style="
+                            width: 35px;
+                            height: 35px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                          "
+                          onerror="this.src='https://ui-avatars.com/api/?name=Team&background=151518&color=ff914d'"
+                        />
+                      </td>
+
+                      <!-- Clickable Team Name -->
+                      <td
+                        class="name-cell clickable-team"
+                        th:text="${team.teamName}"
+                        th:data-team-id="${team.id}"
+                      >
+                        Team Name
+                      </td>
+
+                      <!-- Captain / Organization Name -->
+                      <td th:text="${team.captainName}">Captain Name</td>
+
+                      <!-- Registration Date formatted nicely -->
+                      <td
+                        th:text="${#temporals.format(team.createdAt, 'yyyy-MM-dd')}"
+                      >
+                        2026-06-01
+                      </td>
+
+                      <!-- Dynamic Status Pill based on Enum state -->
+                      <td>
+                        <span
+                          class="status-pill"
+                          th:classappend="${team.status.name() == 'APPROVED' or team.status.name() == 'CONFIRMED'} ? 'status-approved' : (${team.status.name() == 'REJECTED'} ? 'status-rejected' : 'status-pending')"
+                          th:text="${team.status.name() == 'APPROVED' or team.status.name() == 'CONFIRMED'} ? '✓ Approved' : (${team.status.name() == 'REJECTED'} ? '✕ Rejected' : '⏱ Pending')"
+                        >
+                          ⏱ Pending
+                        </span>
+                      </td>
+                    </tr>
+                    <!-- 👇 NO TEAMS / NO SEARCH RESULTS MESSAGE ROW -->
+                    <tr id="noTeamsMessageRow" style="display: none">
+                      <td
+                        colspan="5"
+                        style="
+                          text-align: center;
+                          padding: 40px;
+                          color: #888;
+                          font-size: 14px;
+                        "
+                      >
+                        <i
+                          class="fa-solid fa-users-slash"
+                          style="
+                            font-size: 24px;
+                            margin-bottom: 8px;
+                            display: block;
+                            color: #ff914d;
+                          "
+                        ></i>
+                        No teams found matching your search or filter.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             FIXTURES TAB
+             STATE A (pre-generation): approved teams + Tournament Info.
+             STATE B (post-generation): rounds-rail match schedule + Top Players.
+             Toggled via th:if/th:unless on ${tournament.fixturesGenerated}.
+             STATE B expects a ${rounds} model attribute: a list of round
+             groups, each with roundName + fixtures (fixture.matchNumber,
+             .matchTime, .venue, .teamA/.teamB {teamName, teamLogo}, .status,
+             .dependsOnMatchNumber for TBD legs, .id for the edit button).
+             ============================================================ -->
+        <section class="tab-panel" id="tab-brackets">
+          <div class="two-col" id="fixturesTwoCol">
+            <div class="col-main">
+              <div
+                class="panel"
+                id="preGenerationPanel"
+                th:unless="${tournament.fixturesGenerated}"
+              >
+                <div class="panel-header-row">
+                  <h2 class="panel-title">
+                    Approved Teams — Ready to Schedule
+                  </h2>
+                </div>
+
+                <div class="approved-teams-grid" id="approvedTeamsGrid">
+                  <div
+                    class="approved-team-card"
+                    th:each="team : ${teams}"
+                    th:if="${team.status.name() == 'APPROVED' or team.status.name() == 'CONFIRMED'}"
+                  >
+                    <img
+                      th:src="${team.teamLogo}"
+                      alt="Logo"
+                      class="approved-team-avatar"
+                      onerror="this.src='https://ui-avatars.com/api/?name=Team&background=151518&color=ff914d'"
+                    />
+                    <div class="approved-team-info">
+                      <div
+                        class="approved-team-name"
+                        th:text="${team.teamName}"
+                      >
+                        Team Name
+                      </div>
+                      <div
+                        class="approved-team-captain"
+                        th:text="${team.captainName}"
+                      >
+                        Captain Name
+                      </div>
+                    </div>
+                  </div>
+
+                  <p
+                    class="no-approved-teams-msg"
+                    th:if="${#lists.isEmpty(teams.?[status.name() == 'APPROVED' or status.name() == 'CONFIRMED'])}"
+                  >
+                    No approved teams yet. Approve teams from the Participants
+                    tab before generating fixtures.
+                  </p>
+                </div>
+
+                <div class="pre-generation-actions">
+                  <button
+                    class="btn btn-orange-outline btn-block"
+                    id="generate-fixtures-btn"
+                  >
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Auto-Generate Fixtures
+                  </button>
+                  <button
+                    class="btn btn-violet-outline btn-block"
+                    id="manual-creation-btn"
+                    type="button"
+                  >
+                    <i class="fa-solid fa-plus"></i>
+                    Manual Creation
+                  </button>
+                </div>
+              </div>
+
+              <!-- SCENARIO B: fixtures have been generated -->
+              <div
+                class="panel fixtures-container"
+                id="liveFixturesPanel"
+                th:if="${tournament.fixturesGenerated}"
+              >
+                <div class="page-header">
+                  <div class="page-header-left">
+                    <span class="eyebrow">Fixtures</span>
+                    <h1 th:text="${tournament.tournamentName} + ' fixtures'">
+                      Tournament Match Schedule
+                    </h1>
+                    <p>
+                      Active fixtures generated and scheduled for this
+                      tournament.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="rounds-rail" id="fixtures-list">
+                  <div class="round-block" th:each="round : ${rounds}">
+                    <div class="round-node"></div>
+                    <div class="round-header">
+                      <h2 th:text="${round.roundName}">Round 1</h2>
+                      <span
+                        class="round-count"
+                        th:text="${#lists.size(round.fixtures)} + (${#lists.size(round.fixtures) == 1} ? ' match' : ' matches')"
+                        >1 match</span
+                      >
+                    </div>
+
+                    <div
+                      class="match-fixture-card"
+                      th:each="fixture, iterStat : ${round.fixtures}"
+                    >
+                      <div class="match-info-left">
+                        <span
+                          class="match-number"
+                          th:text="'Match #' + ${fixture.matchNumber}"
+                          >Match #1</span
+                        >
+                        <span class="match-time">
+                          <i class="fa-regular fa-clock"></i>
+                          <span
+                            th:text="${#temporals.format(fixture.matchTime, 'dd MMM, HH:mm')}"
+                            >20 Aug, 18:00</span
+                          >
+                        </span>
+                        <span class="match-venue">
+                          <i class="fa-solid fa-location-dot"></i>
+                          <span th:text="${fixture.venueLocation}"
+                            >Arena A</span
+                          >
+                        </span>
+                      </div>
+
+                      <div class="match-teams-center">
+                        <div class="team-display home">
+                          <span
+                            class="team-name"
+                            th:text="${fixture.teamA != null} ? ${fixture.teamA.teamName} : 'TBD'"
+                            th:classappend="${fixture.teamA == null} ? 'tbd'"
+                            >Team A</span
+                          >
+                          <img
+                            th:src="${fixture.teamA != null} ? ${fixture.teamA.teamLogo} : 'https://ui-avatars.com/api/?name=%3F&background=151518&color=6b6b73'"
+                            alt="Team logo"
+                            class="team-logo"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Team&background=151518&color=ff914d'"
+                          />
+                        </div>
+
+                        <span class="vs-badge">VS</span>
+
+                        <div class="team-display away">
+                          <img
+                            th:src="${fixture.teamB != null} ? ${fixture.teamB.teamLogo} : 'https://ui-avatars.com/api/?name=%3F&background=151518&color=6b6b73'"
+                            alt="Team logo"
+                            class="team-logo"
+                            onerror="this.src='https://ui-avatars.com/api/?name=Team&background=151518&color=ff914d'"
+                          />
+                          <span
+                            class="team-name"
+                            th:text="${fixture.teamB != null} ? ${fixture.teamB.teamName} : 'Winner Match #' + ${fixture.dependsOnMatchNumber}"
+                            th:classappend="${fixture.teamB == null} ? 'tbd'"
+                            >Team B</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="match-status-right">
+                        <span
+                          class="status-badge"
+                          th:classappend="${fixture.status.name() == 'LIVE'} ? 'status-live' : (${fixture.status.name() == 'COMPLETED'} ? 'status-completed-red' : 'status-scheduled')"
+                          th:text="${fixture.status.name() == 'LIVE'} ? 'Live' : (${fixture.status.name() == 'COMPLETED'} ? 'Completed' : 'Scheduled')"
+                          >Scheduled</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-side">
+              <div
+                class="panel"
+                id="tournamentInfoWidget"
+                th:unless="${tournament.fixturesGenerated}"
+              >
+                <h2 class="panel-title">Tournament Info</h2>
+                <div class="status-list">
+                  <div class="status-row">
+                    <span th:text="${tournament.tournamentTimeStatus}"
+                      >Days Remaining</span
+                    >
+                  </div>
+                  <div class="status-row">
+                    <span>Approved Teams</span>
+                    <span
+                      class="value-orange"
+                      th:text="${#lists.size(teams.?[status.name() == 'APPROVED' or status.name() == 'CONFIRMED'])}"
+                      >32</span
+                    >
+                  </div>
+                  <div class="status-row">
+                    <span>Status</span>
+                    <span class="value-violet"
+                      >Ready for Fixture Generation</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="panel"
+                id="topPlayersWidget"
+                th:if="${tournament.fixturesGenerated}"
+              >
+                <h2 class="panel-title">Top Players</h2>
+                <div class="top-players-list">
+                  <div class="top-player-row">
+                    <span class="tp-icon">🔥</span>
+                    <div class="tp-info">
+                      <div class="tp-name">Phoenix Rising</div>
+                      <div class="tp-record">12W &nbsp; 2L</div>
+                    </div>
+                    <span class="tp-rank">#1</span>
+                  </div>
+                  <div class="top-player-row">
+                    <span class="tp-icon">⚡</span>
+                    <div class="tp-info">
+                      <div class="tp-name">Titan Force</div>
+                      <div class="tp-record">11W &nbsp; 3L</div>
+                    </div>
+                    <span class="tp-rank">#2</span>
+                  </div>
+                  <div class="top-player-row">
+                    <span class="tp-icon">🌙</span>
+                    <div class="tp-info">
+                      <div class="tp-name">Shadow Elite</div>
+                      <div class="tp-record">10W &nbsp; 4L</div>
+                    </div>
+                    <span class="tp-rank">#3</span>
+                  </div>
+                  <div class="top-player-row">
+                    <span class="tp-icon">⭐</span>
+                    <div class="tp-info">
+                      <div class="tp-name">Nova Strike</div>
+                      <div class="tp-record">9W &nbsp; 5L</div>
+                    </div>
+                    <span class="tp-rank">#4</span>
+                  </div>
+                  <div class="top-player-row">
+                    <span class="tp-icon">🤖</span>
+                    <div class="tp-info">
+                      <div class="tp-name">Cyber Knights</div>
+                      <div class="tp-record">8W &nbsp; 6L</div>
+                    </div>
+                    <span class="tp-rank">#5</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== MANUAL MATCH CREATION BUILDER =====
+               Hidden by default. Shown only when #manual-creation-btn is
+               clicked (toggle handled in manageTournament.js). Hide again
+               via Cancel or after Save All Fixtures succeeds.
+
+               CHANGED IN THIS UPDATE: each match-slot-row now includes a
+               dedicated Venue text input (class="builder-input venue-input")
+               placed right after the date/time input, so organizers can set
+               a venue per match alongside the round, teams, and time. -->
+          <div
+            class="panel builder-panel"
+            id="manualMatchCreationPanel"
+            style="display: none"
+          >
+            <div class="builder-layout">
+              <!-- LEFT PANEL: Approved Teams Sidebar Pool -->
+              <div class="builder-sidebar">
+                <div class="builder-header">
+                  <h3>Approved Teams</h3>
+                  <p class="builder-subtitle">Drag teams into slots</p>
+                </div>
+
+                <div id="approvedTeamsPool">
+                  <!-- Dynamic: one chip per approved/confirmed team -->
+                  <div
+                    class="approved-team-chip"
+                    draggable="true"
+                    ondragstart="dragTeam(event)"
+                    th:each="team : ${teams}"
+                    th:if="${team.status.name() == 'APPROVED' or team.status.name() == 'CONFIRMED'}"
+                    th:data-team-id="${team.id}"
+                    th:data-team-name="${team.teamName}"
+                    th:data-team-logo="${team.teamLogo}"
+                  >
+                    <img
+                      th:src="${team.teamLogo}"
+                      alt="Logo"
+                      class="team-chip-avatar"
+                      onerror="this.src='https://ui-avatars.com/api/?name=Team&background=151518&color=ff914d'"
+                    />
+                    <span class="team-chip-name" th:text="${team.teamName}"
+                      >Team Name</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT PANEL: Match Schedule Builder Work Area -->
+              <div class="builder-main">
+                <div class="builder-header">
+                  <h3>MANUAL FIXTURE BUILDER</h3>
+                  <p class="builder-subtitle">
+                    Drag teams into match slots. Use the Undo button if you make
+                    a mistake.
+                  </p>
+                </div>
+
+                <div id="matchRowsWrapper">
+                  <!-- Match Row #1 (template row; JS clones this for "+ Add Match Slot") -->
+                  <div class="match-slot-row" data-history="">
+                    <div class="match-number-badge">Match #1</div>
+
+                    <select class="builder-select">
+                      <option value="ROUND_1">Round 1</option>
+                      <option value="ROUND_2">Round 2</option>
+                      <option value="ROUND_3">Round 3</option>
+                      <option value="QUARTER_FINALS">Quarter-Finals</option>
+                      <option value="SEMI_FINALS">Semi-Finals</option>
+                      <option value="FINAL">Final</option>
+                    </select>
+
+                    <!-- Drop Zone Team A -->
+                    <div
+                      class="drop-zone"
+                      ondragover="allowDrop(event)"
+                      ondragleave="removeDropStyle(event)"
+                      ondrop="dropTeam(event, this)"
+                    >
+                      <span>Drop Team A here</span>
+                    </div>
+
+                    <span class="vs-text">VS</span>
+
+                    <!-- Drop Zone Team B -->
+                    <div
+                      class="drop-zone"
+                      ondragover="allowDrop(event)"
+                      ondragleave="removeDropStyle(event)"
+                      ondrop="dropTeam(event, this)"
+                    >
+                      <span>Drop Team B here</span>
+                    </div>
+
+                    <input
+                      type="datetime-local"
+                      class="builder-input"
+                      value="2026-08-20T18:00"
+                    />
+
+                    <!-- NEW: Venue field for this match -->
+                    <input
+                      type="text"
+                      class="builder-input venue-input"
+                      placeholder="Venue (e.g. Arena A)"
+                    />
+
+                    <!-- Undo Button -->
+                    <button
+                      type="button"
+                      class="btn-icon-action"
+                      onclick="undoLastAction(this)"
+                      disabled
+                      title="Undo last placement"
+                    >
+                      ↩ Undo
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-icon-delete"
+                      title="Remove Match"
+                      onclick="removeMatchRow(this)"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                </div>
+
+                <div class="builder-actions-footer">
+                  <button
+                    type="button"
+                    class="btn-secondary"
+                    onclick="addNewMatchRow()"
+                  >
+                    + Add Match Slot
+                  </button>
+                  <div class="right-actions">
+                    <button
+                      type="button"
+                      class="btn-text"
+                      id="cancelBuilderBtn"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-primary-orange"
+                      id="saveAllFixturesBtn"
+                    >
+                      Save All Fixtures
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="tab-live-scoring">
+          <!-- content will be loaded here by JS -->
+        </section>
+
+        <!-- ============================================================
+             SCHEDULE TAB (NEW)
+             ============================================================ -->
+        <section class="tab-panel" id="tab-schedule">
+          <!-- HEADER -->
+          <div class="page-header">
+            <div>
+              <div class="eyebrow">TOURNAMENT SCHEDULE</div>
+
+              <h1 th:text="${tournament.tournamentName} + ' Schedule'">
+                Tournament Schedule
+              </h1>
+
+              <p class="subtitle">
+                Manage match timings, venues and the official tournament
+                schedule.
+              </p>
+            </div>
+
+            <div class="header-actions">
+              <button
+                class="btn"
+                onclick="showToast('Schedule saved as draft')"
+              >
+                Save Draft
+              </button>
+
+              <button
+                class="btn primary"
+                th:text="${tournament.isSchedulePublished} ? 'Schedule Published ✓' : 'Publish Schedule'"
+                th:disabled="${tournament.isSchedulePublished}"
+                onclick="publishSchedule()"
+              >
+                Publish Schedule
+              </button>
+            </div>
+          </div>
+
+          <!-- STATS -->
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">Total Matches</div>
+              <div class="stat-value" th:text="${totalMatches}">12</div>
+              <div
+                class="stat-meta"
+                th:text="'Across ' + ${totalRounds} + ' rounds'"
+              >
+                Across 4 rounds
+              </div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Scheduled</div>
+              <div class="stat-value orange" th:text="${scheduledMatchesCount}">
+                10
+              </div>
+              <div
+                class="stat-meta"
+                th:text="${scheduledPercentage} + '% of all fixtures'"
+              >
+                83% of all fixtures
+              </div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Unscheduled</div>
+              <div class="stat-value" th:text="${unscheduledMatchesCount}">
+                2
+              </div>
+              <div class="stat-meta">Needs organizer action</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-label">Conflicts</div>
+              <div class="stat-value red" th:text="${conflictsCount}">1</div>
+              <div class="stat-meta">Requires attention</div>
+            </div>
+          </div>
+
+          <!-- SCHEDULE -->
+          <div class="schedule-shell">
+            <!-- TOOLBAR -->
+            <div class="toolbar">
+              <div class="date-control">
+                <button class="date-btn" onclick="changeDate(-1)">‹</button>
+
+                <div class="date-display">
+                  <div
+                    class="date-day"
+                    id="dateDay"
+                    th:text="${activeDateFormatted}"
+                  ></div>
+
+                  <div
+                    class="date-number"
+                    th:text="${tournament.tournamentName}"
+                  >
+                    Summer Championship 2026
+                  </div>
+                </div>
+
+                <button class="date-btn" onclick="changeDate(1)">›</button>
+              </div>
+
+              <div class="filters">
+                <button
+                  class="filter active"
+                  data-filter="all"
+                  onclick="setFilter('all', this)"
+                >
+                  All
+                </button>
+
+                <button
+                  class="filter"
+                  data-filter="upcoming"
+                  onclick="setFilter('upcoming', this)"
+                >
+                  Upcoming
+                </button>
+
+                <button
+                  class="filter"
+                  data-filter="live"
+                  onclick="setFilter('live', this)"
+                >
+                  Live
+                </button>
+
+                <select class="select" onchange="filterVenue(this.value)">
+                  <option value="all">All Venues</option>
+                  <option value="Stadium A">Stadium A</option>
+                  <option value="Stadium B">Stadium B</option>
+                  <option value="Arena 1">Arena 1</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- TIMELINE -->
+            <!-- TIMELINE -->
+            <div class="timeline">
+              <!-- Loop through each Date group -->
+              <div th:each="group : ${rounds}">
+                <div class="timeline-header">
+                  <strong th:text="${group.roundName}">2026-08-20</strong>
+                  <span
+                    th:text="${#lists.size(group.fixtures)} + ' matches scheduled'"
+                    >matches scheduled</span
+                  >
+                </div>
+
+                <!-- Loop through fixtures belonging specifically to this date -->
+                <div
+                  th:each="fixture : ${group.fixtures}"
+                  class="schedule-row"
+                  th:data-status="${#strings.toLowerCase(fixture.status)}"
+                >
+                  <!-- Time slot -->
+                  <div
+                    class="time"
+                    th:classappend="${fixture.status.name() == 'LIVE'} ? ' current'"
+                    th:text="${fixture.matchTime != null ? #temporals.format(fixture.matchTime, 'hh:mm a') : 'TBD'}"
+                  >
+                    06:00 PM
+                  </div>
+
+                  <div class="event-column">
+                    <div
+                      class="match-card"
+                      th:classappend="${fixture.status.name() == 'LIVE'} ? ' live' : (${conflictMessages != null && conflictMessages.containsKey(fixture.id)} ? ' conflict')"
+                    >
+                      <div>
+                        <div class="match-top">
+                          <span
+                            class="match-number"
+                            th:text="'MATCH #' + ${fixture.matchNumber}"
+                            >MATCH #08</span
+                          >
+                          <span
+                            class="round-tag"
+                            th:text="${fixture.roundNumber}"
+                            >ROUND 3</span
+                          >
+                          <span
+                            class="status"
+                            th:classappend="${#strings.toLowerCase(fixture.status)}"
+                            th:text="${fixture.status}"
+                            >Scheduled</span
+                          >
+                        </div>
+
+                        <div class="teams">
+                          <div class="team">
+                            <div class="team-logo">
+                              <img
+                                th:src="${fixture.teamA != null} ? ${fixture.teamA.teamLogo} : 'https://ui-avatars.com/api/?name=%3F&background=151518&color=6b6b73'"
+                                alt="Logo"
+                                style="
+                                  width: 24px;
+                                  height: 24px;
+                                  border-radius: 50%;
+                                  object-fit: cover;
+                                "
+                              />
+                            </div>
+                            <div
+                              class="team-name"
+                              th:text="${fixture.teamA != null} ? ${fixture.teamA.teamName} : 'TBD'"
+                            >
+                              Team A
+                            </div>
+                          </div>
+                          <span class="vs">VS</span>
+                          <div class="team">
+                            <div class="team-logo">
+                              <img
+                                th:src="${fixture.teamB != null} ? ${fixture.teamB.teamLogo} : 'https://ui-avatars.com/api/?name=%3F&background=151518&color=6b6b73'"
+                                alt="Logo"
+                                style="
+                                  width: 24px;
+                                  height: 24px;
+                                  border-radius: 50%;
+                                  object-fit: cover;
+                                "
+                              />
+                            </div>
+                            <div
+                              class="team-name"
+                              th:text="${fixture.teamB != null} ? ${fixture.teamB.teamName} : 'TBD'"
+                            >
+                              Team B
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="match-info">
+                          <span
+                            th:text="'📍 ' + (${fixture.venueLocation != null} ? ${fixture.venueLocation} : 'Unassigned Venue')"
+                            >📍 Stadium A</span
+                          >
+                        </div>
+
+                        <!-- Conflict message -->
+                        <div
+                          class="conflict-message"
+                          th:if="${conflictMessages != null && conflictMessages.containsKey(fixture.id)}"
+                          th:text="'⚠️ Venue conflict — ' + ${conflictMessages.get(fixture.id)}"
+                        >
+                          ⚠️ Venue conflict message
+                        </div>
+                      </div>
+
+                      <!-- RESTORED EDIT & OPTIONS ACTIONS BUTTONS -->
+                      <div class="match-actions">
+                        <button
+                          class="icon-btn"
+                          th:onclick="openEditModal([[${fixture.id}]], [[${fixture.matchNumber}]], [[${fixture.teamA != null ? fixture.teamA.teamName : 'TBD'}]], [[${fixture.teamB != null ? fixture.teamB.teamName : 'TBD'}]], [[${fixture.matchDate}]], [[${fixture.matchTime}]], [[${fixture.venueLocation}]])"
+                        >
+                          ✎
+                        </button>
+                        <button
+                          class="icon-btn"
+                          onclick="toggleOptionsMenu(this)"
+                        >
+                          ⋮
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="schedule-footer">
+              <div>Last saved 2 minutes ago</div>
+
+              <div class="legend">
+                <div class="legend-item">
+                  <span class="dot blue"></span>
+                  Scheduled
+                </div>
+
+                <div class="legend-item">
+                  <span class="dot orange"></span>
+                  Live
+                </div>
+
+                <div class="legend-item">
+                  <span class="dot green"></span>
+                  Completed
+                </div>
+
+                <div class="legend-item">
+                  <span class="dot red"></span>
+                  Conflict
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             LIVE SCORING TAB (Dynamic Fragment)
+             ============================================================ -->
+        <!-- <section
+          class="tab-panel"
+          id="tab-live-scoring"
+          th:if="${contentFragment != null}"
+        >
+          <div th:replace="${contentFragment}"></div>
+        </section> -->
+
+        <section class="tab-panel" id="tab-settings">
+          <div class="panel">
+            <h2 class="panel-title">Tournament Settings</h2>
+            <form class="settings-form" id="settings-form">
+              <div class="form-grid">
+                <div class="form-field">
+                  <label>Tournament Name</label
+                  ><input type="text" value="Summer Championship 2026" />
+                </div>
+                <div class="form-field">
+                  <label>Game</label><input type="text" value="Valorant" />
+                </div>
+                <div class="form-field">
+                  <label>Venue</label
+                  ><input type="text" value="Los Angeles, CA" />
+                </div>
+                <div class="form-field">
+                  <label>Max Players</label><input type="text" value="128" />
+                </div>
+              </div>
+              <div class="form-field form-field-full">
+                <label>Description</label>
+                <textarea
+                  placeholder="Add tournament description..."
+                ></textarea>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-orange">
+                  Save Changes
+                </button>
+                <button type="button" class="btn btn-outline">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="panel danger-zone">
+            <h2 class="panel-title danger-title">⚠ Danger Zone</h2>
+            <p class="danger-text">
+              Irreversible actions. Please proceed with caution.
+            </p>
+            <div class="danger-actions">
+              <button class="btn btn-danger-outline">
+                🗑 Delete Tournament
+              </button>
+              <button class="btn btn-danger">Archive Tournament</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ===== TEAM DETAILS SIDE SLIDE-OUT DRAWER ===== -->
+    <div class="team-drawer-overlay" id="teamDrawerOverlay" hidden></div>
+    <div class="team-slide-drawer" id="teamSlideDrawer">
+      <div class="drawer-header">
+        <h3 id="drawerTeamName">Team Details</h3>
+        <button class="drawer-close-btn" id="drawerCloseBtn">&times;</button>
+      </div>
+      <div class="drawer-body" id="drawerBodyContent">
+        <div class="drawer-section">
+          <h4>Registration Status</h4>
+          <p id="drawerTeamStatus">
+            <span class="status-pill status-approved">✓ Approved</span>
+          </p>
+        </div>
+
+        <!-- PAYMENT VERIFICATION SECTION -->
+        <div class="drawer-section">
+          <h4>Payment Verification</h4>
+          <div class="payment-verify-box">
+            <div class="payment-info-row">
+              <span class="payment-label">Ref ID:</span>
+              <span class="payment-ref">UPI/8392019482</span>
+            </div>
+            <button
+              class="btn-mini btn-view-receipt"
+              data-receipt="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop"
+            >
+              📄 View Receipt
+            </button>
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Squad Roster & ID Proofs</h4>
+          <ul class="drawer-squad-list" id="drawerSquadList">
+            <li class="squad-member-row">
+              <span class="player-name">Jos Buttler</span>
+              <button
+                class="btn-mini btn-view-id"
+                data-player="Jos Buttler"
+                data-doc="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=600&auto=format&fit=crop"
+              >
+                View ID
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="drawer-actions">
+          <button class="btn btn-orange" id="drawerApproveBtn">
+            Approve Team
+          </button>
+          <button class="btn btn-danger-outline" id="drawerRejectBtn">
+            Reject / Remove
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PROFESSIONAL ID DOCUMENT PREVIEW MODAL ===== -->
+    <div class="doc-modal-overlay" id="docModalOverlay" hidden>
+      <div class="doc-modal-box">
+        <div class="doc-modal-header">
+          <h3 id="docModalTitle">Player ID Proof</h3>
+          <button class="drawer-close-btn" id="docModalCloseBtn">
+            &times;
+          </button>
+        </div>
+        <div class="doc-modal-body">
+          <img
+            id="docPreviewImage"
+            src=""
+            alt="Player ID Document"
+            class="doc-preview-img"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PLAYER PROFILE QUICK VIEW MODAL ===== -->
+    <div
+      id="playerProfileModal"
+      class="custom-modal-overlay"
+      style="display: none"
+      hidden
+    >
+      <div class="custom-modal-box">
+        <div class="custom-modal-header">
+          <h3>
+            <i class="fa-solid fa-user-shield"></i> Player Profile Preview
+          </h3>
+          <button
+            type="button"
+            class="custom-modal-close"
+            onclick="closePlayerProfileModal()"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="player-modal-body">
+          <!-- Explicit ID and clean wrapper classes -->
+          <img id="modalPlayerAvatar" src="" alt="Avatar" />
+          <h4 id="modalPlayerName"></h4>
+          <p id="modalPlayerUsername"></p>
+
+          <div class="player-modal-info-grid">
+            <div>
+              <strong>PRIMARY SPORT:</strong>
+              <div id="modalPlayerSport">-</div>
+            </div>
+            <div>
+              <strong>SKILL LEVEL:</strong>
+              <div id="modalPlayerSkill">-</div>
+            </div>
+            <div>
+              <strong>ROLE:</strong>
+              <div id="modalPlayerRole">-</div>
+            </div>
+            <div>
+              <strong>EXPERIENCE:</strong>
+              <div id="modalPlayerExp">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="custom-modal-actions">
+          <button
+            type="button"
+            class="btn-custom-cancel"
+            onclick="closePlayerProfileModal()"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RESCHEDULE MATCH MODAL (NEW — belongs to tab-schedule) ===== -->
+    <div class="modal-overlay" id="modal" hidden>
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">Reschedule Match</div>
+
+          <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="modal-match">
+            <div class="modal-match-label">Match</div>
+
+            <div class="modal-match-teams" id="modalTeams">
+              Mumbai Warriors vs Shivaji Park Lions
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label>Date</label>
+
+              <input type="date" value="2026-08-15" />
+            </div>
+
+            <div class="field">
+              <label>Start Time</label>
+
+              <input type="time" id="modalTime" value="19:00" />
+            </div>
+
+            <div class="field full">
+              <label>Venue</label>
+
+              <select id="modalVenue">
+                <option>Stadium A</option>
+                <option>Stadium B</option>
+                <option>Arena 1</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label>Duration</label>
+
+              <select>
+                <option>60 minutes</option>
+                <option>90 minutes</option>
+                <option>120 minutes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn" onclick="closeModal()">Cancel</button>
+
+          <button class="btn primary" onclick="saveSchedule()">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SCHEDULE TOAST (NEW — belongs to tab-schedule) ===== -->
+    <div class="toast" id="toast">
+      <span class="toast-icon">✓</span>
+      <span id="toastMessage">Saved successfully</span>
+    </div>
+
+    <!-- EDIT MATCH MODAL -->
+    <div id="editMatchModal" class="modal-overlay" hidden>
+      <div class="modal-content">
+        <h3>Edit Match Details</h3>
+        <form id="editMatchForm" onsubmit="submitEditMatch(event)">
+          <input type="hidden" id="editMatchId" />
+
+          <div class="modal-group">
+            <label class="modal-label">Match</label>
+            <input
+              type="text"
+              id="editMatchTitle"
+              class="modal-input"
+              readonly
+            />
+          </div>
+
+          <div class="modal-group">
+            <label class="modal-label">Date & Time</label>
+            <input
+              type="datetime-local"
+              id="editMatchDatetime"
+              class="modal-input"
+              required
+            />
+          </div>
+
+          <div class="modal-group-footer">
+            <label class="modal-label">Venue Location</label>
+            <input
+              type="text"
+              id="editMatchVenue"
+              class="modal-input"
+              required
+              placeholder="e.g. Stadium A"
+            />
+          </div>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="modal-btn-cancel"
+              onclick="closeEditModal()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="modal-btn-save">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Email Send after Publish Schedule  -->
+    <!-- CONFIRMATION MODAL -->
+    <div id="confirmModal" class="custom-modal" style="display: none" hidden>
+      <div class="modal-content">
+        <h3>Publish Tournament Schedule</h3>
+        <p>
+          Are you sure you want to publish this schedule? Once confirmed,
+          notification emails will be dispatched to all team captains.
+        </p>
+        <div class="modal-actions">
+          <button class="btn secondary" onclick="closeConfirmModal()">
+            Cancel
+          </button>
+          <button class="btn primary" onclick="executePublishSchedule()">
+            Yes, Publish
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div id="successModal" class="custom-modal" style="display: none">
+      <div class="modal-content">
+        <h3>🎉 Schedule Published!</h3>
+        <p>
+          The schedule has been published successfully and notification emails
+          have been sent to the team captains.
+        </p>
+        <div class="modal-actions">
+          <button class="btn primary" onclick="location.reload()">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Include Bootstrap JavaScript Bundle (Required for modals to work) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script th:inline="javascript">
+      // This safely injects your Java organizerProfile into the browser
+      window.organizerProfile = /*[[${organizerProfile}]]*/ null;
+      console.log("Loaded Profile in JS:", window.organizerProfile);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/fragments/organizerNavbar.js}"></script>
+    <script th:src="@{/js/fragments/liveScoringContent.js}"></script>
+    <script th:src="@{/js/tournament/manageTournament.js}"></script>
+  </body>
+</html>

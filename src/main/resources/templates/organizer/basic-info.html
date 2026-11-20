@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complete Your Profile - Champion Call</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/organizer/onboarding.css" />
+  </head>
+  <body>
+    <div class="onboard-page">
+      <div class="onboard-logo">
+        <img
+          th:src="@{/Images/champion.webp}"
+          alt="ChampionCall Logo"
+          class="custom-logo"
+        />
+        <span>CHAMPION<span class="accent">CALL</span></span>
+      </div>
+
+      <div class="step-tracker">
+        <div class="step-dot active"><span>1</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span>2</span></div>
+        <div class="step-line"></div>
+        <div class="step-dot"><span>3</span></div>
+      </div>
+
+      <div class="onboard-card">
+        <div class="onboard-header">
+          <span class="step-label">STEP 1 OF 3</span>
+          <h1>Complete Your Profile</h1>
+          <p>Just the basics — this unlocks your dashboard</p>
+        </div>
+
+        <form
+          class="onboard-form"
+          th:action="@{/api/organizer/do-profile}"
+          data-th-object="${organizerBasicForm}"
+          method="post"
+          enctype="multipart/form-data"
+          novalidate
+        >
+          <div class="avatar-upload-block">
+            <div class="avatar-circle" id="avatarCircle">
+              <span id="avatarInitials">CC</span>
+              <img
+                id="avatarPreview"
+                src=""
+                alt="Profile photo"
+                style="display: none"
+              />
+            </div>
+            <label for="photoUpload" class="photo-upload-label">
+              <i class="fa-solid fa-camera"></i> Add photo (optional)
+            </label>
+            <input
+              type="file"
+              id="photoUpload"
+              th:field="*{profileImage}"
+              accept="image/*"
+              hidden
+            />
+            <p
+              class="error-msg"
+              th:if="${#fields.hasErrors('profileImage')}"
+              data-th-errors="*{profileImage}"
+            ></p>
+          </div>
+          <div class="form-group">
+            <label for="orgName"
+              >Organization / Team Name <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              id="orgName"
+              th:field="*{organizationName}"
+              placeholder="e.g. Champions Premier League"
+              required
+            />
+            <p
+              class="error-msg"
+              th:if="${#fields.hasErrors('organizationName')}"
+              data-th-errors="*{organizationName}"
+            ></p>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber"
+              >Phone Number <span class="required">*</span></label
+            >
+            <input
+              type="tel"
+              id="phoneNumber"
+              th:field="*{phoneNumber}"
+              placeholder="+91 98765 43210"
+              required
+            />
+            <p
+              class="error-msg"
+              th:if="${#fields.hasErrors('phoneNumber')}"
+              data-th-errors="*{phoneNumber}"
+            ></p>
+          </div>
+
+          <button type="submit" class="btn-primary-action">
+            Continue to Dashboard <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    <div
+      id="message-provider"
+      th:data-success="${success}"
+      th:data-error="${error}"
+    ></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script th:src="@{/js/organizer/basic-info.js}"></script>
+  </body>
+</html>

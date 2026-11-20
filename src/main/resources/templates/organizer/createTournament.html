@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChampionCall - Create Tournament</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" th:href="@{/css/organizer/createTournament.css}" />
+    <link rel="stylesheet" th:href="@{/css/fragments/organizerNavbar.css}" />
+    <link rel="stylesheet" th:href="@{/css/fragments/organizerSidebar.css}" />
+  </head>
+  <body>
+    <!-- Mobile Overlay for Global Sidebar -->
+    <div
+      class="mobile-overlay"
+      id="mobileOverlay"
+      onclick="toggleSidebar()"
+    ></div>
+
+    <div class="app-wrapper">
+      <!-- ========================================== -->
+      <!-- GLOBAL LEFT SIDEBAR -->
+      <!-- ========================================== -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <i class="fa-solid fa-trophy brand-icon"></i>
+          <span class="brand-text">CHAMPION<span>CALL</span></span>
+        </div>
+
+        <div
+          th:replace="~{fragments/organizerSidebar :: organizerSidebar('createTournament',${organizerProfile})}"
+        ></div>
+      </aside>
+
+      <!-- ========================================== -->
+      <!-- MAIN CONTENT AREA -->
+      <!-- ========================================== -->
+      <div class="main-content">
+        <!-- GLOBAL TOP NAVBAR -->
+        <div
+          th:replace="~{fragments/organizerNavbar :: organizerNavbar('create',${organizerProfile})}"
+        ></div>
+
+        <!-- WIZARD VIEWPORT -->
+        <main class="dashboard-viewport">
+          <!-- NEW WRAPPER TO CENTER THE FORM AND LIMIT WIDTH -->
+          <div class="ct-wrapper">
+            <!-- WIZARD HEADER -->
+            <div class="ct-header">
+              <div class="header-titles">
+                <h1>CREATE NEW TOURNAMENT</h1>
+              </div>
+              <span class="auto-save-text">Auto-saved as Draft: Just now</span>
+            </div>
+
+            <!-- WIZARD LAYOUT (Steps on left, Form on right) -->
+            <div class="ct-layout">
+              <!-- WIZARD STEPS SIDEBAR -->
+              <aside class="wizard-sidebar">
+                <div class="step-item active" id="nav-step-1">
+                  <div class="step-circle">1</div>
+                  <span class="step-label">Basic Details</span>
+                </div>
+                <div class="step-item" id="nav-step-2">
+                  <div class="step-circle">2</div>
+                  <span class="step-label">Registration & Entry</span>
+                </div>
+                <div class="step-item" id="nav-step-3">
+                  <div class="step-circle">3</div>
+                  <span class="step-label">Match Format</span>
+                </div>
+                <div class="step-item" id="nav-step-4">
+                  <div class="step-circle">4</div>
+                  <span class="step-label">Prizes & Awards</span>
+                </div>
+                <div class="step-item" id="nav-step-5">
+                  <div class="step-circle">5</div>
+                  <span class="step-label">Branding & Publish</span>
+                </div>
+              </aside>
+
+              <!-- WIZARD FORM CARD -->
+              <div class="ct-form-card">
+                <form
+                  th:action="@{/api/organizer/tournament/save-draft}"
+                  id="tournamentForm"
+                  data-th-object="${tournamentDTO}"
+                  onsubmit="return false;"
+                  autocomplete="off"
+                  nonvalidate
+                >
+                  <input
+                    type="hidden"
+                    id="hiddenStep"
+                    th:value="${activeStep != null ? activeStep : 1}"
+                  />
+                  <input
+                    type="hidden"
+                    id="tournamentId"
+                    name="id"
+                    th:value="*{id}"
+                  />
+
+                  <!-- STEP 1: BASIC DETAILS -->
+                  <div class="wizard-step active" id="step-1">
+                    <h2>Step 1: Basic Details</h2>
+
+                    <div class="form-group full-width">
+                      <label>Tournament Name</label>
+                      <input
+                        type="text"
+                        name="tournamentName"
+                        th:field="*{tournamentName}"
+                        placeholder="e.g., Pune Monsoon Cup 2026"
+                      />
+                      <p
+                        th:if="${#fields.hasErrors('tournamentName')}"
+                        data-th-errors="*{tournamentName}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+
+                    <div class="form-group full-width">
+                      <label>Tournament Type</label>
+                      <div class="select-wrapper">
+                        <select
+                          th:field="*{tournamentType}"
+                          name="tournamentType"
+                          autocomplete="off"
+                        >
+                          <option value="" disabled selected>
+                            Select Tournament Type
+                          </option>
+                          <option value="local">Local</option>
+                          <option value="corporate">Corporate</option>
+                          <option value="college">College</option>
+                          <option value="club">Club</option>
+                          <option value="charity">Charity</option>
+                          <option value="open">Open</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-icon"></i>
+                      </div>
+                      <p
+                        th:if="${#fields.hasErrors('sport')}"
+                        data-th-errors="*{sport}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+
+                    <div class="form-group full-width">
+                      <label>Sport</label>
+                      <div class="select-wrapper">
+                        <select
+                          id="sportSelect"
+                          th:field="*{sport}"
+                          name="sport"
+                          onchange="toggleBallType()"
+                          autocomplete="off"
+                        >
+                          <option value="" disabled selected>
+                            Select a sport
+                          </option>
+                          <option value="cricket">Cricket</option>
+                          <option value="football">Football</option>
+                          <option value="kabaddi">Kabaddi</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-icon"></i>
+                      </div>
+                      <p
+                        th:if="${#fields.hasErrors('sport')}"
+                        data-th-errors="*{sport}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+
+                    <div
+                      id="ballTypeSection"
+                      class="form-group full-width"
+                      style="display: none"
+                    >
+                      <label>Ball Type</label>
+                      <div class="select-wrapper">
+                        <select th:field="*{ballType}" name="ballType">
+                          <option value="" disabled selected>
+                            Select ball type
+                          </option>
+                          <option value="tennis">Tennis Ball</option>
+                          <option value="season">Season Ball</option>
+                          <option value="rubber">Rubber Ball</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                      <label>Venue/Location</label>
+                      <div class="input-with-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <input
+                          type="text"
+                          th:field="*{venueLocation}"
+                          name="venueLocation"
+                          placeholder="Enter venue location"
+                        />
+                      </div>
+                      <p
+                        th:field="${#fields.hasErrors('venueLocation')}"
+                        data-th-errors="*{venueLocation}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+
+                    <div class="grid-2-col">
+                      <div class="form-group">
+                        <label>Start Date</label>
+                        <input
+                          type="date"
+                          th:field="*{startDate}"
+                          name="startDate"
+                        />
+                        <p
+                          th:if="${#fields.hasErrors('startDate')}"
+                          th:errors="*{startDate}"
+                          class="error-msg"
+                        ></p>
+                      </div>
+                      <div class="form-group">
+                        <label>End Date</label>
+                        <input
+                          type="date"
+                          th:field="*{endDate}"
+                          name="endDate"
+                        />
+                        <p
+                          th:if="${#fields.hasErrors('endDate')}"
+                          th:errors="*{endDate}"
+                          class="error-msg"
+                        ></p>
+                      </div>
+                    </div>
+                    <div class="form-group full-width">
+                      <label>Description </label>
+                      <textarea
+                        th:field="*{description}"
+                        name="description"
+                        rows="4"
+                        maxlength="500"
+                        placeholder="Tell players what makes this tournament worth joining — format highlights, prizes, who it's for, etc."
+                      ></textarea>
+                      <p
+                        th:if="${#fields.hasErrors('description')}"
+                        th:errors="*{description}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+                  </div>
+
+                  <!-- STEP 2: REGISTRATION & ENTRY -->
+                  <div class="wizard-step" id="step-2">
+                    <h2>Step 2: Registration & Entry</h2>
+                    <div class="grid-2-col">
+                      <div class="form-group">
+                        <label>Entry Fee (₹)</label>
+                        <input
+                          type="number"
+                          th:field="*{entryFee}"
+                          name="entryFee"
+                          placeholder="e.g., 2500"
+                        />
+                        <p
+                          th:if="${#fields.hasErrors('entryFee')}"
+                          th:errors="*{entryFee}"
+                          class="error-msg"
+                        ></p>
+                      </div>
+                      <div class="form-group">
+                        <label>Max Teams Allowed</label>
+                        <input
+                          type="number"
+                          th:field="*{maxTeamsAllowed}"
+                          name="maxTeamsAllowed"
+                          placeholder="e.g., 16"
+                        />
+                        <p
+                          th:if="${#fields.hasErrors('maxTeamsAllowed')}"
+                          th:errors="*{maxTeamsAllowed}"
+                          class="error-msg"
+                        ></p>
+                      </div>
+                    </div>
+                    <div class="form-group full-width">
+                      <label>Registration Start Date </label>
+                      <input
+                        type="date"
+                        th:field="*{registrationStartDate}"
+                        name="registrationStartDate"
+                      />
+                      <p
+                        th:if="${#fields.hasErrors('registrationStartDate')}"
+                        th:errors="*{registrationStartDate}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+                    <div class="form-group full-width">
+                      <label>Registration Deadline</label>
+                      <input
+                        type="date"
+                        th:field="*{registrationDeadline}"
+                        name="registrationDeadline"
+                      />
+                      <p
+                        th:if="${#fields.hasErrors('registrationDeadline')}"
+                        th:errors="*{registrationDeadline}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+                    <div class="form-group full-width">
+                      <label>Player Category</label>
+                      <div class="select-wrapper">
+                        <select
+                          th:field="*{playerCategory}"
+                          name="playerCategory"
+                        >
+                          <option value="open">Men's Open</option>
+                          <option value="corporate">Corporate / IT</option>
+                          <option value="u16">Under 16</option>
+                          <option value="womens">Women's Open</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-icon"></i>
+                      </div>
+                      <p
+                        th:if="${#fields.hasErrors('playerCategory')}"
+                        th:errors="*{playerCategory}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+                  </div>
+
+                  <!-- STEP 3: MATCH FORMAT -->
+                  <div class="wizard-step" id="step-3">
+                    <h2>Step 3: Match Format & Rules</h2>
+                    <div class="form-group full-width">
+                      <label>Tournament Style</label>
+                      <div class="select-wrapper">
+                        <select
+                          th:field="*{tournamentStyle}"
+                          name="tournamentStyle"
+                        >
+                          <option value="knockout">
+                            Knockout (Direct Elimination)
+                          </option>
+                          <option value="league">League (Points Table)</option>
+                          <option value="group_knockout">
+                            Group Stage + Knockout
+                          </option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-icon"></i>
+                      </div>
+                      <p
+                        th:if="${#fields.hasErrors('tournamentStyle')}"
+                        th:errors="*{tournamentStyle}"
+                        class="error-msg"
+                      ></p>
+                    </div>
+                    <div class="grid-2-col">
+                      <div class="form-group">
+                        <label>Minimum Squad Size</label>
+                        <input
+                          type="number"
+                          th:field="*{minSquadSize}"
+                          name="minSquadSize"
+                          placeholder="e.g., 5"
+                        />
+                        <p
+                          th:if="${#fields.hasErrors('minSquadSize')}"
+                          th:errors="*{minSquadSize}"
+                          class="error-msg"
+                        ></p>
+                      </div>
+                      <div class="form-group">
+                        <label>Maximum Squad Size</label>
+                        <input
+                          type="number"
+                          th:field="*{maxSquadSize}"
+                          name="maxSquadSize"
+                          placeholder="e.g., 8"
+                        />
+                        <p
+                          th:if="${#fields.hasErrors('maxSquadSize')}"
+                          th:errors="*{maxSquadSize}"
+                          class="error-msg"
+                        ></p>
+                      </div>
+                    </div>
+
+                    <label>Custom Rules & Regulations</label>
+                    <div
+                      class="rule-input-group"
+                      style="display: flex; gap: 10px; margin-bottom: 20px"
+                    >
+                      <input
+                        type="text"
+                        id="rule-Input"
+                        class="rule-input"
+                        placeholder="Add a rule..."
+                      />
+                      <button type="button" class="btn-add" onclick="addRule()">
+                        <i class="fa-solid fa-plus"></i>
+                      </button>
+                    </div>
+
+                    <!-- The Display Section: Shows rules from DB + JS-added rules -->
+                    <div id="rulesContainer">
+                      <div
+                        class="rule-item"
+                        th:each="rule, stat : *{customRules}"
+                        th:if="${rule.description != null and !#strings.isEmpty(rule.description)}"
+                      >
+                        <span
+                          th:text="${stat.count} + '. ' + ${rule.description}"
+                        ></span>
+
+                        <!-- Hidden input to keep Spring binding working with correct indices -->
+                        <input
+                          type="hidden"
+                          th:field="*{customRules[__${stat.index}__].description}"
+                          th:value="${rule.description}"
+                        />
+
+                        <button
+                          type="button"
+                          class="btn-edit"
+                          onclick="editRow(this)"
+                        >
+                          <i class="fa-solid fa-pencil"></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-del"
+                          onclick="removeRow(this)"
+                        >
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STEP 4: PRIZES & AWARDS -->
+                  <div class="wizard-step" id="step-4">
+                    <h2>Step 4: Prizes & Awards</h2>
+                    <p class="step-subtext">
+                      Customize the rewards for your tournament.
+                    </p>
+
+                    <div class="prize-row-list" id="prizeRowList">
+                      <!-- By-default Prize user can see -->
+                      <div class="prize-row">
+                        <input
+                          type="text"
+                          class="row-input name-input"
+                          value="Champions"
+                          placeholder="Prize Name"
+                        />
+                        <div class="select-wrap">
+                          <select class="row-select">
+                            <option selected>Cash</option>
+                            <option>Trophy</option>
+                            <option>Gear</option>
+                          </select>
+                        </div>
+                        <input
+                          type="text"
+                          class="row-input value-input"
+                          value="₹50,000 + Gold Trophy"
+                          placeholder="Value / Details"
+                        />
+                        <button type="button" class="row-delete-btn">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                      <div class="prize-row" th:each="prize, stat : *{prizes}">
+                        <input
+                          type="text"
+                          class="row-input name-input"
+                          th:field="*{prizes[__${stat.index}__].prizeName}"
+                          th:name="'prizes[' + ${stat.index} + '].prizeName'"
+                          placeholder="Prize Name"
+                        />
+                        <input
+                          type="text"
+                          class="row-input name-input"
+                          value="Champions"
+                          th:field="*{prizes[__${stat.index}_].prizeType}"
+                          th:name="'prizes[' + ${stat.index} + '].prizeType'"
+                          placeholder="Prize Name"
+                        />
+                        <div class="select-wrap">
+                          <select class="row-select">
+                            <option selected>Cash</option>
+                            <option>Trophy</option>
+                            <option>Gear</option>
+                          </select>
+                        </div>
+                        <input
+                          type="text"
+                          class="row-input value-input"
+                          value="₹50,000 + Gold Trophy"
+                          th:field="*{prizes[__${stat.index}__].prizeDetails}"
+                          th:name="'prizes[' + ${stat.index} + '].prizeDetails'"
+                          placeholder="Value / Details"
+                        />
+                        <button type="button" class="row-delete-btn">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      class="add-prize-btn"
+                      id="addPrizeBtn"
+                    >
+                      <i class="fa-solid fa-plus"></i> Add Custom Prize
+                    </button>
+                  </div>
+
+                  <!-- STEP 5: BRANDING & PUBLISH -->
+                  <div class="wizard-step" id="step-5">
+                    <h2>Step 5: Branding & Publish</h2>
+                    <div class="form-group full-width">
+                      <label>Tournament Banner</label>
+                      <div
+                        class="file-upload-box"
+                        onclick="document.getElementById('fileInput').click()"
+                      >
+                        <input
+                          type="file"
+                          id="fileInput"
+                          name="bannerImage"
+                          accept="image/*"
+                          style="display: none"
+                        />
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Click or drag to upload banner image</span>
+                        <p>Recommended size: 1200 x 400px</p>
+                      </div>
+                    </div>
+                    <div class="form-group full-width">
+                      <label>Tournament Access</label>
+                      <div class="radio-card-group">
+                        <!-- Public Option -->
+                        <label class="radio-card">
+                          <input
+                            type="radio"
+                            name="tournamentAccess"
+                            value="PUBLIC"
+                          />
+                          <div class="rc-content">
+                            <i class="fa-solid fa-earth-asia"></i>
+                            <div>
+                              <strong>Public</strong>
+                              <span>Anyone can see and register</span>
+                            </div>
+                          </div>
+                        </label>
+
+                        <!-- Private Option -->
+                        <label class="radio-card">
+                          <input
+                            type="radio"
+                            name="tournamentAccess"
+                            value="PRIVATE"
+                          />
+                          <div class="rc-content">
+                            <i class="fa-solid fa-lock"></i>
+                            <div>
+                              <strong>Private</strong>
+                              <span
+                                >Only invited players can see and register</span
+                              >
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- FOOTER ACTIONS -->
+                  <div class="ct-form-actions">
+                    <button type="button" class="btn-cancel" onclick="goBack()">
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-save-next"
+                      value="SAVE_AND_NEXT"
+                      onclick="saveCurrentStep()"
+                    >
+                      Save & Next
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- End ct-wrapper -->
+        </main>
+      </div>
+    </div>
+    <div
+      id="identityModal"
+      class="modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        class="modal-content"
+        style="
+          background: #1f2937;
+          color: #fff;
+          padding: 20px;
+          border-radius: 10px;
+          text-align: center;
+        "
+      >
+        <p id="modalMessage"></p>
+        <div class="modal-actions" style="margin-top: 20px">
+          <button id="btnCancel" style="margin-right: 10px">Cancel</button>
+          <button
+            id="btnOk"
+            style="
+              background: #ea580c;
+              color: white;
+              border: none;
+              padding: 8px 16px;
+              border-radius: 5px;
+            "
+          >
+            Complete Identity
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:src="@{/js/fragments/organizerNavbar.js}"></script>
+    <script th:src="@{/js/organizer/createTournament.js}"></script>
+  </body>
+</html>

@@ -1,6 +1,9 @@
 package com.champions_Call.Configuration;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.UUID;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +13,10 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Component;
-
+import org.springframework.context.annotation.Lazy;
 import com.champions_Call.Helper.AppConstants;
 import com.champions_Call.model.Provider;
 import com.champions_Call.model.User;
@@ -28,7 +33,9 @@ public class oauthAuthenticationSuccessHandler implements AuthenticationSuccessH
      @Autowired
     private UserRepo userRepo;
 
-    
+    @Autowired
+    @Lazy
+    private PersistentTokenRepository tokenRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse res, Authentication authentication) throws IOException, ServletException {
@@ -87,8 +94,7 @@ public class oauthAuthenticationSuccessHandler implements AuthenticationSuccessH
        User user = new User();
        user.setRole(assignedRole);
        user.setEmailVerified(true);
-       user.setEnabled(true);
-
+       
 
        
        if(authorizedClientRegistrationId.equalsIgnoreCase("google")){
@@ -118,6 +124,9 @@ public class oauthAuthenticationSuccessHandler implements AuthenticationSuccessH
        String email = user.getEmail();
        User userdb = userRepo.findByEmail(email).orElse(null);
 
+       // Determine role: existing DB role wins; otherwise check the "Role" cookie
+        String assignedRole1 = AppConstants.ROLE_PLAYER;
+
        if(userdb!=null){
 
             if(userdb.getProvider()==Provider.SELF){
@@ -141,6 +150,54 @@ public class oauthAuthenticationSuccessHandler implements AuthenticationSuccessH
         logger.info("User is already Exist...");
       }
 
-      new DefaultRedirectStrategy().sendRedirect(req, res, "/player/profile");
+     // Decides the Buttons based on role
+     // Button join a Tournament and Become an Organizer
+      User sessionUser = (userdb != null) ? userdb : user;
+      req.getSession().setAttribute("loggedInUser", sessionUser);
+
+    //   MANUALLY GENERATING REMEMBER-ME ENTRIES FOR THE DATABASE
+    // MANUALLY GENERATING REMEMBER-ME ENTRIES FOR THE DATABASE
+        try {
+            String usernameForToken = (userdb != null) ? userdb.getEmail() : user.getEmail();
+            
+            PersistentRememberMeToken rememberMeToken = new PersistentRememberMeToken(
+                usernameForToken,                    // username
+                UUID.randomUUID().toString(),        // series unique tracker
+                UUID.randomUUID().toString(),        // random token string values
+                new Date()                           // timestamp
+            );
+            
+            // This line physically writes to your `persistent_logins` database table!
+            tokenRepository.createNewToken(rememberMeToken);
+            logger.info("Successfully dropped remember-me database token record for user: " + usernameForToken);
+
+            // 💡 CHANGE 3 (UPDATED): Encode the cookie into a secure Base64 format matching Spring's protocol
+            String[] cookieTokens = new String[] { rememberMeToken.getSeries(), rememberMeToken.getTokenValue() };
+            String rawCookieContent = String.join(":", cookieTokens);
+            
+            // Base64 encode the string "series:tokenValue" securely
+            String encodedCookieValue = java.util.Base64.getEncoder().encodeToString(rawCookieContent.getBytes());
+            
+            Cookie rememberMeCookie = new Cookie("remember-me", encodedCookieValue);
+            rememberMeCookie.setMaxAge(86400 * 7);  // Valid for 7 full days
+            rememberMeCookie.setPath("/");          // Valid across your entire domain root path space
+            rememberMeCookie.setHttpOnly(true);     // Protects against XSS scripting token theft
+            res.addCookie(rememberMeCookie);
+            logger.info("Remember-Me Base64 encoded browser cookie set successfully.");
+
+        } catch (Exception e) {
+            logger.error("Failed to establish auto-login persistence mappings: ", e);
+        }
+
+        // CHANGE 4: DYNAMIC ROLE-BASED DASHBOARD ROUTING
+        String finalRole = (userdb != null) ? userdb.getRole() : assignedRole1;
+        
+        if (finalRole.equals(AppConstants.ROLE_ORGANIZER)) {
+            logger.info("Routing user to Organizer Dashboard.");
+        } else {
+            logger.info("Routing user to Public Player Home viewport.");
+        }
+
+        new DefaultRedirectStrategy().sendRedirect(req, res, "/home");
     }
 }

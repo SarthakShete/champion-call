@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <!-- ========================================== -->
+    <!-- 1. THE GRID FRAGMENT (CARDS + PAGINATION)  -->
+    <!-- ========================================== -->
+    <th:block th:fragment="tournament-grid">
+      <!-- Loop through tournaments -->
+      <th:block
+        th:if="${not #lists.isEmpty(myTournaments)}"
+        th:each="t : ${myTournaments}"
+      >
+        <div
+          th:replace="~{fragments/tournament_list :: tournament-card(${t})}"
+        ></div>
+      </th:block>
+
+      <!-- No results message -->
+      <div
+        th:if="${#lists.isEmpty(myTournaments)}"
+        class="no-results"
+        style="
+          padding: 40px;
+          color: white;
+          grid-column: 1 / -1;
+          text-align: center;
+        "
+      >
+        <p>No tournaments found matching these filters.</p>
+      </div>
+
+      <!-- Pagination Controls (Will only show if there is more than 1 page!) -->
+      <div
+        class="dash-pagination-container"
+        th:if="${totalPages > 1}"
+        style="
+          grid-column: 1 / -1;
+          display: flex;
+          justify-content: center;
+          margin-top: 30px;
+        "
+      >
+        <div class="dash-pagination">
+          <!-- Previous Button -->
+          <button
+            type="button"
+            class="dash-page-btn prev-next"
+            th:disabled="${!hasPrevious}"
+            th:onclick="'fetchMyTournaments(' + (${currentPage} - 1) + ')'"
+          >
+            <i class="fa-solid fa-chevron-left"></i> Prev
+          </button>
+
+          <!-- Page Numbers Loop -->
+          <div class="dash-page-numbers">
+            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+              <button
+                type="button"
+                class="dash-page-btn"
+                th:classappend="${i == currentPage} ? 'active' : ''"
+                th:text="${i + 1}"
+                th:onclick="'fetchMyTournaments(' + ${i} + ')'"
+              ></button>
+            </th:block>
+          </div>
+
+          <!-- Next Button -->
+          <button
+            type="button"
+            class="dash-page-btn prev-next"
+            th:disabled="${!hasNext}"
+            th:onclick="'fetchMyTournaments(' + (${currentPage} + 1) + ')'"
+          >
+            Next <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </th:block>
+
+    <!-- ========================================== -->
+    <!-- 2. THE INDIVIDUAL TOURNAMENT CARD          -->
+    <!-- ========================================== -->
+    <div
+      th:fragment="tournament-card(t)"
+      class="tournament-card"
+      th:if="${t != null}"
+    >
+      <div th:class="'tournament-banner ' + ${t.sport}">
+        <span
+          class="sport-badge"
+          th:text="${t.sportIcon} + ' ' + (${t.sport != null ? t.sport : 'Not Specified'})"
+        >
+          Cricket
+        </span>
+
+        <span
+          class="status-badge"
+          th:text="${t.status}"
+          th:classappend="${t.status.name() == 'UNPUBLISHED' ? 'badge-unpublished' : 
+                      (t.status.name() == 'REGISTRATION_OPEN' ? 'badge-active' : 
+                      (t.status.name() == 'ONGOING' ? 'badge-ongoing' : 
+                      (t.status.name() == 'COMPLETED' ? 'badge-completed' : 
+                      (t.status.name() == 'CANCELLED' ? 'badge-cancelled' : 'badge-default'))))}"
+        >
+        </span>
+      </div>
+
+      <div class="tournament-body">
+        <h3 class="tournament-title" th:text="${t.tournamentName}">
+          Pune Premier League
+        </h3>
+
+        <div class="tournament-meta">
+          <div class="meta-item">
+            <i class="fa-regular fa-calendar"></i>
+            <span
+              th:text="${#temporals.format(t.startDate, 'dd MMM')} + ' - ' + ${#temporals.format(t.endDate, 'dd MMM yyyy')}"
+            >
+              15 Aug - 20 Aug 2026
+            </span>
+          </div>
+
+          <div class="meta-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span th:text="${t.venueLocation}">Balewadi Stadium, Pune</span>
+          </div>
+        </div>
+
+        <div class="progress-section">
+          <div class="progress-header">
+            <span> Registrations </span>
+            <span
+              th:text="${t.registeredTeams} + ' / ' + (${t.maxTeamsAllowed} != null ? ${t.maxTeamsAllowed} : '0') + ' Teams'"
+            >
+              12 / 16 Teams
+            </span>
+          </div>
+
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              th:classappend="${t.registrationPercentage > 90} ? 'bg-danger' : 'bg-primary'"
+              th:style="'width: ' + ${t.registrationPercentage} + '%'"
+            ></div>
+          </div>
+        </div>
+
+        <div class="revenue-row">
+          <span>Total Revenue</span>
+          <strong
+            th:text="${t.totalRevenue != null} ? '₹' + ${#numbers.formatDecimal(t.totalRevenue, 0, 'COMMA', 0, 'POINT')} : '₹0'"
+          >
+            ₹24,000
+          </strong>
+        </div>
+
+        <div class="attention-box">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span> 2 Team Registrations Pending Approval </span>
+        </div>
+
+        <div class="last-updated">
+          <i class="fa-regular fa-clock"></i>
+          Updated 18 minutes ago
+        </div>
+
+        <div class="actions">
+          <a
+            th:if="${t.status.name() == 'UNPUBLISHED'}"
+            th:href="@{'/api/organizer/tournament/create-tournament/step-' + (${t.currentStep != null ? t.currentStep : 1}) + '?id=' + ${t.id}}"
+            class="btn-complete"
+          >
+            Complete Process
+          </a>
+
+          <th:block th:unless="${t.status.name() == 'UNPUBLISHED'}">
+            <a
+              th:href="@{'/api/organizer/tournament/view/' + ${t.id}}"
+              class="btn-secondary"
+              >View Details</a
+            >
+
+            <!-- THIS MUST BE AN <a href> TAG, NOT A BUTTON -->
+            <a th:href="@{/api/organizer/tournament/manage/{id}(id=${t.id})}" class="btn-edit" style="text-decoration: none; display: inline-block;">
+    Manage Tournament
+</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

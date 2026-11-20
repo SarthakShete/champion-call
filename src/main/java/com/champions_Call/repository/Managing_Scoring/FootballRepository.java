@@ -1,0 +1,11 @@
+package com.champions_Call.repository.Managing_Scoring;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.champions_Call.model.Manging_Scoring.Football.FootballMatch;
+
+@Repository 
+public interface FootballRepository extends JpaRepository<FootballMatch,Long>{
+
+}
